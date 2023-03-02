@@ -1,0 +1,8 @@
+{
+  "apps": [
+    {
+      "name": "da-be",
+      "script": "node dist/main.js"
+    }
+  ]
+}
