@@ -14,38 +14,30 @@ export class GetNFT {
   @ApiProperty({
     required: false,
     description:
-      'if you send this params up, will return about nfts same id,params not required',
+      'if you send this params up, will return about nfts same ownerAddress,params not required',
   })
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  textSearch: string;
+  ownerAddress: string;
 
   @ApiProperty({
     example: 'F',
     required: false,
     description:
-      'if you send this params up, will return about nfts same status,params not required',
+      'if you send this params up, will return about nfts same landId,params not required',
   })
   @IsOptional()
   @IsString()
-  status: string;
+  landId: string;
 
   @ApiProperty({
     required: false,
-    description: 'if hasFNFTPool is true, will return NFTs has FNFTPool',
+    description: 'if tokenId, will return about nfts same tokenId,params not required',
   })
   @IsOptional()
-  @Transform(({ value }: TransformFnParams) => JSON.parse(value))
-  hasFNFTPool: boolean;
-
-  @ApiProperty({
-    example: false,
-    required: false,
-  })
-  @IsOptional()
-  @Transform(({ value }: TransformFnParams) => JSON.parse(value))
-  isDeleted: boolean;
+  @Transform(({ value }: TransformFnParams) => Number(value))
+  tokenId: string;
 
   @ApiProperty({
     example: 1,
@@ -81,11 +73,7 @@ export class GetNFT {
   @ApiProperty({
     example: 'NFTname',
     enum: [
-      '_id',
       'createdAt',
-      'NFTname',
-      'fractionalizeOn',
-      'deletedOn',
       'tokenId',
     ],
     required: false,

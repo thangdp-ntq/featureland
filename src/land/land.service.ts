@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateLandDto } from './dto/create-land.dto';
-import { UpdateLandDto } from './dto/update-land.dto';
 
 @Injectable()
 export class LandService {
-  create(createLandDto: CreateLandDto) {
+  create(createLandDto) {
     return 'This action adds a new land';
   }
 
@@ -16,7 +14,7 @@ export class LandService {
     return `This action returns a #${id} land`;
   }
 
-  update(id: number, updateLandDto: UpdateLandDto) {
+  update(id: number, updateLandDto) {
     return `This action updates a #${id} land`;
   }
 

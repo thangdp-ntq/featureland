@@ -19,8 +19,8 @@ export class NFTResponse extends ApiSuccessResponse<NFT> {
   @ApiProperty({ example: HttpStatus.CREATED })
   code: string;
 
-  @ApiProperty({ type: NFT })
-  data: NFT;
+  @ApiProperty({ type: Object })
+  data;
 
   @ApiProperty({ example: CommonCode.DEFAULT_SUCCESS_MESSAGE })
   message: string;
@@ -121,16 +121,16 @@ export class GetNFTSResponse extends ApiSuccessResponse<Pagination<NFT[]>> {
     properties: {
       items: {
         type: 'array',
-        items: { type: 'object', $ref: '#/components/schemas/NFT' },
+        items: { type: 'object' },
       },
     },
   })
-  data: Pagination<NFT[]>;
+  data: Pagination<[]>;
 
   @ApiProperty({ example: CommonCode.DEFAULT_SUCCESS_MESSAGE })
   message: string;
 
-  public static success(items: Pagination<NFT[]>) {
+  public static success(items: Pagination<[]>) {
     const result = new GetNFTSResponse();
     result.success(items);
 
