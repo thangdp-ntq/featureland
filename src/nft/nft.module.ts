@@ -11,10 +11,6 @@ import {
 } from '~/schemas';
 import { UploadService } from '../upload/upload.service';
 import { WinstonModule } from 'nest-winston';
-import {
-  MetaDataFields,
-  MetaDataFieldSchema,
-} from '../schemas/metadata-fields.schema';
 import { CommonModule } from '~/common-service/common.module';
 import { NFTLog, NFTLogSchema } from '~/schemas/nft-log.schema';
 import { EventsGateway } from '~/socket/socket.gateway';
@@ -30,7 +26,6 @@ import { JwtModule } from '@nestjs/jwt';
     MongooseModule.forFeature([
       { name: NFT.name, schema: NFTSchema },
       { name: User.name, schema: UserSchema },
-      { name: MetaDataFields.name, schema: MetaDataFieldSchema },
       { name: NFTLog.name, schema: NFTLogSchema },
     ]),
     CommonModule,

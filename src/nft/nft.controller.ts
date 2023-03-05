@@ -109,13 +109,13 @@ export class NftController {
       );
     }
     const nftResponse = await this.nftService.findOne(id);
-    if (nftResponse.code === HttpStatus.NOT_FOUND) {
-      throw HttpError.error(
-        HttpStatus.NOT_FOUND,
-        NFT_RESPOND_MESSAGE.NFT_NOT_FOUND,
-        {},
-      );
-    }
+    // if (nftResponse.code === HttpStatus.NOT_FOUND) {
+    //   throw HttpError.error(
+    //     HttpStatus.NOT_FOUND,
+    //     NFT_RESPOND_MESSAGE.NFT_NOT_FOUND,
+    //     {},
+    //   );
+    // }
 
     return nftResponse;
   }
