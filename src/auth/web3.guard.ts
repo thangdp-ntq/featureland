@@ -18,7 +18,7 @@ import { EVENT_SOCKET } from '~/common/constants';
 export class Web3Guard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
-   // @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly commonService: CommonService,
     private readonly eventsGateway: EventsGateway,
   ) {}

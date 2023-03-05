@@ -9,6 +9,16 @@
             "date": 1677725830750,
             "name": "logs/api-2023-03-02.log",
             "hash": "ce2b9bd80828f9944f7a96d3528e9068"
+        },
+        {
+            "date": 1677923319455,
+            "name": "logs/api-2023-03-04.log",
+            "hash": "2f0be0014cf8e21c75042e9bcead9f26"
+        },
+        {
+            "date": 1678025337584,
+            "name": "logs/api-2023-03-05.log",
+            "hash": "396995812e16f97ffd3d2314d940b826"
         }
     ],
     "hashType": "md5"

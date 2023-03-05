@@ -6,7 +6,6 @@ import { JwtStrategy } from './jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema, JwtToken, JwtTokenSchema } from '~/schemas';
-import { AuthAdminController } from './auth.admin.controller';
 import { AuthController } from './auth.controller';
 import { CommonService } from '~/common-service/common.service';
 import { PriceToken, PriceTokenSchema } from '~/schemas/price-token.schema';

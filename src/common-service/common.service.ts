@@ -25,7 +25,7 @@ import { EMAIL_CONFIG } from '~/common/email-config';
 export class CommonService {
   private readonly logger = new Logger(CommonService.name);
   constructor(
-    // @Inject(CACHE_MANAGER) private cacheManager: Cache,
+     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @InjectModel(PriceToken.name)
     private priceTokenModel: Model<PriceTokenDocument>,
     @InjectModel(TimeSetting.name)
@@ -38,32 +38,32 @@ export class CommonService {
 
   async setCache(key: string, data: any, options?: CachingConfig) {
     try {
-     // await this.cacheManager.set(key, data, options);
+     await this.cacheManager.set(key, data, options);
     } catch (error) {
       this.logError(error);
     }
   }
 
   getCache(key: string) {
-   // return this.cacheManager.get(key) as any;
+   return this.cacheManager.get(key) as any;
   }
 
   async delCache(key: string) {
-    //await this.cacheManager.del(key);
+    await this.cacheManager.del(key);
   }
 
   async getCacheDecimals(
     web3Gateway: Web3Gateway,
     address: any,
   ): Promise<number> {
-    // let decimals: string = await this.getCache(address);
-    // if (!decimals || decimals === '0') {
-    //   const result = await web3Gateway.getDecimal(address);
-    //   decimals = result.decimals;
-    //   await this.cacheManager.set(address, decimals, {
-    //     ttl: TTL_CACHE_DECIMALS,
-    //   });
-    // }
+    let decimals: string = await this.getCache(address);
+    if (!decimals || decimals === '0') {
+      const result = await web3Gateway.getDecimal(address);
+      decimals = result.decimals;
+      await this.cacheManager.set(address, decimals, {
+        ttl: TTL_CACHE_DECIMALS,
+      });
+    }
      return Number(1);
   }
 

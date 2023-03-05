@@ -14,6 +14,8 @@ import { CustomFormat } from './common/custom-format.log';
 import { CommonModule } from './common-service/common.module';
 import { RegionModule } from './region/region.module';
 import { LandModule } from './land/land.module';
+import { RedisClientOptions } from 'redis';
+import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
   imports: [
@@ -21,10 +23,24 @@ import { LandModule } from './land/land.module';
       rootPath: join(__dirname, '..', 'public'),
     }),
     ScheduleModule.forRoot(),
-    CacheModule.register({isGlobal:true}),
+    CacheModule.registerAsync<RedisClientOptions>({
+      useFactory: (): CacheModuleOptions => {
+        const options = {
+          store: redisStore,
+          ttl: Number(process.env.REDIS_TTL),
+          host: process.env.REDIS_HOST,
+          port: Number(process.env.REDIS_PORT || 6379),
+        };
+
+        return options;
+      },
+      isGlobal: true,
+    }),
     MongooseModule.forRoot('mongodb://localhost:27017', {
-      dbName:'test',
-      directConnection:true
+      dbName:'featureland',
+      directConnection:true,
+      user:'featureland',
+      pass:'featureland'
     }),
 
     AuthModule,

@@ -1,0 +1,186 @@
+[03/05/2023 21:08:57] [debug]	 -Not support this chain  
+
+[03/05/2023 21:11:46] [debug]	 -Cannot read properties of undefined (reading 'split')  
+
+[03/05/2023 21:14:05] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:14:05] [debug]	 -NOT_USER  
+
+[03/05/2023 21:15:59] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:15:59] [debug]	 -NOT_USER  
+
+[03/05/2023 21:16:10] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:16:10] [debug]	 -NOT_USER  
+
+[03/05/2023 21:17:25] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:17:25] [debug]	 -NOT_USER  
+
+[03/05/2023 21:17:37] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:17:37] [debug]	 -NOT_USER  
+
+[03/05/2023 21:18:20] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:18:20] [debug]	 -NOT_USER  
+
+[03/05/2023 21:20:13] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:20:13] [debug]	 -NOT_USER  
+
+[03/05/2023 21:20:18] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:20:18] [debug]	 -NOT_USER  
+
+[03/05/2023 21:20:43] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:20:43] [debug]	 -NOT_USER  
+
+[03/05/2023 21:24:15] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:24:15] [debug]	 -NOT_USER  
+
+[03/05/2023 21:52:25] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:52:25] [debug]	 -NOT_USER  
+
+[03/05/2023 21:54:39] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:54:39] [debug]	 -NOT_USER  
+
+[03/05/2023 21:55:34] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:55:34] [debug]	 -NOT_USER  
+
+[03/05/2023 21:55:34] [error]	 - 400 
+
+[03/05/2023 21:55:35] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:55:35] [debug]	 -NOT_USER  
+
+[03/05/2023 21:55:35] [error]	 - 400 
+
+[03/05/2023 21:55:35] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:55:35] [debug]	 -NOT_USER  
+
+[03/05/2023 21:55:35] [error]	 - 400 
+
+[03/05/2023 21:55:50] [error]	 - Validation error {"message":"Validation error","code":"E0","errors":["walletAddress must be an Ethereum address"]} 
+
+[03/05/2023 21:55:54] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:55:54] [debug]	 -NOT_USER  
+
+[03/05/2023 21:55:54] [error]	 - 400 
+
+[03/05/2023 21:57:51] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:57:51] [debug]	 -NOT_USER  
+
+[03/05/2023 21:57:51] [error]	 - 400 
+
+[03/05/2023 21:57:54] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:57:54] [debug]	 -NOT_USER  
+
+[03/05/2023 21:57:54] [error]	 - 400 
+
+[03/05/2023 21:59:53] [error]	 -Current wallet isn't user  
+
+[03/05/2023 21:59:53] [debug]	 -NOT_USER  
+
+[03/05/2023 21:59:53] [error]	 - 400 
+
+[03/05/2023 22:01:36] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:01:36] [debug]	 -NOT_USER  
+
+[03/05/2023 22:01:36] [error]	 - 400 
+
+[03/05/2023 22:01:37] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:01:37] [debug]	 -NOT_USER  
+
+[03/05/2023 22:01:37] [error]	 - 400 
+
+[03/05/2023 22:02:17] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:02:17] [debug]	 -NOT_USER  
+
+[03/05/2023 22:02:17] [error]	 - 400 
+
+[03/05/2023 22:02:21] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:02:21] [debug]	 -NOT_USER  
+
+[03/05/2023 22:02:21] [error]	 - 400 
+
+[03/05/2023 22:02:30] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:02:30] [debug]	 -NOT_USER  
+
+[03/05/2023 22:02:30] [error]	 - 400 
+
+[03/05/2023 22:06:14] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:06:14] [debug]	 -NOT_USER  
+
+[03/05/2023 22:06:14] [error]	 - 400 
+
+[03/05/2023 22:06:22] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:06:22] [debug]	 -NOT_USER  
+
+[03/05/2023 22:06:22] [error]	 - 400 
+
+[03/05/2023 22:07:08] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:07:08] [debug]	 -NOT_USER  
+
+[03/05/2023 22:07:08] [error]	 - 400 
+
+[03/05/2023 22:07:36] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:07:36] [debug]	 -NOT_USER  
+
+[03/05/2023 22:07:36] [error]	 - 400 
+
+[03/05/2023 22:08:06] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:08:06] [debug]	 -NOT_USER  
+
+[03/05/2023 22:08:06] [error]	 - 400 
+
+[03/05/2023 22:08:37] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:08:37] [debug]	 -NOT_USER  
+
+[03/05/2023 22:08:58] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:08:58] [debug]	 -NOT_USER  
+
+[03/05/2023 22:09:12] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:09:12] [debug]	 -NOT_USER  
+
+[03/05/2023 22:09:24] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:09:24] [debug]	 -NOT_USER  
+
+[03/05/2023 22:09:29] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:09:29] [debug]	 -NOT_USER  
+
+[03/05/2023 22:11:37] [error]	 -Current wallet isn't user  
+
+[03/05/2023 22:11:37] [debug]	 -NOT_USER  
+
+[03/05/2023 22:11:53] [debug]	 -command find requires authentication  
+
+[03/05/2023 22:12:44] [debug]	 -command find requires authentication  
+
+[03/05/2023 22:14:25] [debug]	 -"expiresIn" should be a number of seconds or string representing a timespan  
+

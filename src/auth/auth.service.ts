@@ -35,6 +35,7 @@ export class AuthService {
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(JwtToken.name) private jwtToken: Model<JwtTokenDocument>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -59,6 +60,7 @@ export class AuthService {
       );
 
       const isAddressValid = ethers.utils.isAddress(params.walletAddress);
+      console.log(addressRecover)
       if (addressRecover.toLowerCase() === params.walletAddress.toLowerCase()) {
         let user = await this.userModel.findOne({
           address: Utils.queryInsensitive(params.walletAddress),
@@ -75,6 +77,7 @@ export class AuthService {
         const accessToken = await this._generateAccessToken(user, '');
         return accessToken;
       } else {
+        console.log(7999)
         this.logger.error("Current wallet isn't user");
         throw CommonCode.NOT_USER;
       }
@@ -98,7 +101,7 @@ export class AuthService {
         if (tokenHeader && tokenStored && tokenHeader.id === tokenStored.id) {
           await Promise.all([
             await jwtToken.remove(),
-            // await this.cacheManager.del(token),
+            await this.cacheManager.del(token),
           ]);
 
           return true;
@@ -106,6 +109,8 @@ export class AuthService {
       }
       return false;
     } catch (error) {
+      console.log(error)
+      console.log(123)
       this.logger.error(error);
       return false;
     }

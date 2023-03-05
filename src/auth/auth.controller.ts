@@ -70,7 +70,11 @@ export class AuthController {
       }
       return new ApiSuccessResponse<unknown>().success(result, '');
     } catch (error) {
-      throw error;
+      return HttpError.error(
+        HttpStatus.BAD_REQUEST,
+        'Can not connect to this wallet',
+        [],
+      );
     }
   }
 
