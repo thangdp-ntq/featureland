@@ -17,3 +17,5 @@ export class Region {
 }
 
 export const RegionSchema = SchemaFactory.createForClass(Region);
+
+export type RegionDocument = Region & Document;

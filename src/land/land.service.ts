@@ -1,24 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Land, LandDocument } from "~/schemas/land.schema";
+import { Model } from "mongoose";
 
 @Injectable()
 export class LandService {
-  create(createLandDto) {
-    return 'This action adds a new land';
-  }
+  constructor(
+    @InjectModel(Land.name) private landCollection: Model<LandDocument>
+  ) {}
 
   findAll() {
-    return `This action returns all land`;
+    return this.landCollection.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} land`;
+  findOne(id: string) {
+    return this.landCollection.findOne({id});
   }
 
-  update(id: number, updateLandDto) {
-    return `This action updates a #${id} land`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} land`;
+  addNft(id: string) {
+    return this.landCollection.findOne({id});
   }
 }

@@ -22,4 +22,5 @@ export class Land {
   ownerId: number;
 }
 
+export type LandDocument = Land & Document;
 export const LandSchema = SchemaFactory.createForClass(Land);

@@ -47,7 +47,7 @@ export class LandController {
       'Get Region by Id',
   })
   findOne(@Param("id") id: string) {
-    return this.landService.findOne(+id);
+    return this.landService.findOne(id);
   }
 
   @Post(":id/add-nft")
@@ -61,22 +61,22 @@ export class LandController {
       data: { type: 'object', example: {} },
     },
   } })
-  findOne1(@Param("id") id: string,@Body() tokens:AddNFTDto) {
-    return this.landService.findOne(+id);
+  addNft(@Param("id") id: string,@Body() tokens:AddNFTDto) {
+    return this.landService.addNft(id);
   }
 
-  @Post(":id/remove-nft")
-  @ApiResponse({ status: HttpStatus.OK, schema: {
-    properties: {
-      code: { type: 'string', example: API_SUCCESS },
-      message: {
-        type: 'string',
-        example: CommonCode.DEFAULT_SUCCESS_MESSAGE,
-      },
-      data: { type: 'object', example: {} },
-    },
-  } })
-  findOne2(@Param("id") id: string,@Body() tokens:RemoveNFTDto) {
-    return this.landService.findOne(+id);
-  }
+  // @Post(":id/remove-nft")
+  // @ApiResponse({ status: HttpStatus.OK, schema: {
+  //   properties: {
+  //     code: { type: 'string', example: API_SUCCESS },
+  //     message: {
+  //       type: 'string',
+  //       example: CommonCode.DEFAULT_SUCCESS_MESSAGE,
+  //     },
+  //     data: { type: 'object', example: {} },
+  //   },
+  // } })
+  // findOne2(@Param("id") id: string,@Body() tokens:RemoveNFTDto) {
+  //   return this.landService.findOne(id);
+  // }
 }
