@@ -8,8 +8,6 @@ import {
   NFTSchema,
   User,
   UserSchema,
-  BatchLabel,
-  BatchLabelSchema,
 } from '~/schemas';
 import { UploadService } from '../upload/upload.service';
 import { WinstonModule } from 'nest-winston';
@@ -31,7 +29,6 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     MongooseModule.forFeature([
       { name: NFT.name, schema: NFTSchema },
-      { name: BatchLabel.name, schema: BatchLabelSchema },
       { name: User.name, schema: UserSchema },
       { name: MetaDataFields.name, schema: MetaDataFieldSchema },
       { name: NFTLog.name, schema: NFTLogSchema },

@@ -29,7 +29,6 @@ import {
 import { GetNFT } from './dto/get-nft.dto';
 import {
   GetNFTSResponse,
-  LabelNftAttribute,
   NFTErrorResponse,
   NFTErrorResponseFIleLangue,
   NFTNotFound,
@@ -59,7 +58,6 @@ import { Model } from 'mongoose';
 import { HttpError, HttpValidationError } from '../common/responses/api-errors';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import { BatchLabel, BatchLabelDocument } from '../schemas/batch-label.schema';
 import { isInt } from 'class-validator';
 import { ErrorDetail } from '../common/responses/api-error';
 import { Request } from 'express';
@@ -75,8 +73,6 @@ export class NftController {
   constructor(
     private readonly nftService: NftService,
     @InjectModel(NFT.name) private nftModel: Model<NFTDocument>,
-    @InjectModel(BatchLabel.name)
-    private labelAttributeNftModel: Model<BatchLabelDocument>,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
 

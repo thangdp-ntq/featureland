@@ -9,10 +9,6 @@ import {
 import { Pagination } from '../../common/interface';
 import { ApiErrorResponse } from '../../common/responses/api-errors';
 import { ApiSuccessResponse } from '../../common/responses/api-success';
-import {
-  BatchLabel,
-  BatchLabelDocument,
-} from '../../schemas/batch-label.schema';
 import { NFT } from '../../schemas/NFT.schema';
 
 export class NFTResponse extends ApiSuccessResponse<NFT> {
@@ -49,23 +45,6 @@ export class ResponseNftDuplicateName {
   message: string;
 }
 
-export class LabelNftAttribute extends ApiSuccessResponse<BatchLabel> {
-  @ApiProperty({ example: HttpStatus.OK })
-  code: string;
-
-  @ApiProperty({ type: [BatchLabel], description: 'only 4 item' })
-  data: BatchLabelDocument;
-
-  @ApiProperty({ example: CommonCode.DEFAULT_SUCCESS_MESSAGE })
-  message: string;
-
-  public static success(label: BatchLabel) {
-    const result = new LabelNftAttribute();
-    result.success(label);
-
-    return result;
-  }
-}
 export class NFTErrorResponse extends ApiErrorResponse {
   @ApiProperty({ example: CommonCode.E4 })
   code: number;

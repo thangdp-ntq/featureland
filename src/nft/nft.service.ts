@@ -1,5 +1,5 @@
 import { NFTLog, NFTLogDocument } from './../schemas/nft-log.schema';
-import { FNFT, FNFTPool, User, UserDocument } from '~/schemas';
+import {  User, UserDocument } from '~/schemas';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { NFT, NFTDocument } from '../schemas/NFT.schema';
@@ -18,7 +18,6 @@ import {
 } from '../common/constants';
 
 import { Utils } from '../common/utils';
-import { BatchLabel, BatchLabelDocument } from '../schemas/batch-label.schema';
 import { UploadService } from '../upload/upload.service';
 import BigNumber from 'bignumber.js';
 import {
@@ -34,7 +33,6 @@ import { HttpError } from '~/common/responses/api-errors';
 export class NftService {
   constructor(
     @InjectModel(NFT.name) private nftModel: Model<NFTDocument>,
-    @InjectModel(BatchLabel.name) private labelModel: Model<BatchLabelDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(NFTLog.name) private logModel: Model<NFTLogDocument>,
     @InjectModel(MetaDataFields.name)
@@ -88,14 +86,6 @@ export class NftService {
       }
     }
     const piline: PipelineStage[] = [];
-    piline.push({
-      $lookup: {
-        from: FNFTPool.name,
-        as: FNFTPool.name,
-        localField: 'tokenId',
-        foreignField: 'fNFT.nftId',
-      },
-    });
     // if(getParams.hasFNFTPool) {
     //   piline.push({
     //     $match: {status
@@ -436,7 +426,7 @@ export class NftService {
   }
 
   async mappingAttributeNft(nft) {
-    const labelAttributes = await this.labelModel.find({ index: [1, 2, 3, 4] });
+    const labelAttributes =[]
     const res = [{}, {}, {}, {}];
     labelAttributes.map((labelAttribute) => {
       res[labelAttribute.index - 1] = {
@@ -473,32 +463,6 @@ export class NftService {
       process.env.AWS_FOLDER_METADATA,
       nft.tokenId,
     );
-  }
-
-  async getFNFTByNFTId(nftId): Promise<FNFT> {
-    const nft = await this.nftModel.findOne({ tokenId: nftId });
-    let fNFT: FNFT = null;
-    if (nft) {
-      fNFT = {
-        nftId: nft.tokenId,
-        nftName: nft.NFTname,
-        description: nft.description,
-        FNFTname: nft.FNFTname,
-        fNFTSymbol: nft.symbol,
-        nftAttributes: nft.attributes,
-        totalSupply: nft.numberFNFT,
-        availableAmount: nft.numberFNFT,
-        exchangeRates: '0',
-        totalSold: '0',
-        nftIdHash: nft?.nftIdHash,
-        fNFTIdHash: nft?.fNFTIdHash,
-        nftTransactionHash: nft?.nftTransactionHash,
-        fNFTTransactionHash: nft?.fNFTTransactionHash,
-        metaDataFields: nft.metaDataFields,
-        fNFTUrl: nft.imageURL,
-      };
-    }
-    return fNFT;
   }
 
   async updateNFTWhenMintSuccess(tokenId, data) {
