@@ -19,7 +19,8 @@ export class WebhookController {
   async webhook(@Body() data: any) {
     try {
       console.log(data)
-      return await this.webhookService.processWebhook(data);
+       await this.webhookService.processWebhook(data);
+      throw 1;
     } catch (error) {
       throw error;
     }

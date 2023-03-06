@@ -244,16 +244,31 @@ export class NftService {
   }
 
   async TranferNft(data) {
-    console.log(data)
-    const nft = await this.nftModel.findOne({ tokenId: data.id });
+    console.log(data);
+    const nft = await this.nftModel.findOne({
+      tokenId: Number(data.metadata.tokenId),
+    });
     if (nft) {
-     await this.nftModel.updateOne({ id: nft.id }, { ownerId: data.ownerId });
+      await this.nftModel.updateOne(
+        { id: nft.id },
+        { ownerId: data.metadata.to }
+      );
     } else {
       await this.nftModel.create({
-        ownerId: "",
-        tokenId: "",
+        ownerId: data.metadata.to,
+        tokenId: Number(data.metadata.tokenId),
       });
     }
+    await this.logModel.create({
+      data:JSON.stringify(data),
+      tokenId: data.metadata.tokenId,
+      from: data.metadata.from,
+      to: data.metadata.to,
+      contractAddress: data.contractAddress,
+      eventName: data.eventName,
+      recordId: data.recordId,
+      transactionHash: data.transactionHash,
+    });
     return true;
   }
 }

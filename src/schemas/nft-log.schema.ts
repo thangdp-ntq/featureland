@@ -1,11 +1,11 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import * as paginate from 'mongoose-paginate-v2';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import * as paginate from "mongoose-paginate-v2";
 
 export type NFTLogDocument = NFTLog & Document;
 
 @Schema({
   timestamps: true,
-  collection: 'NftLog',
+  collection: "NftLog",
 })
 export class NFTLog {
   @Prop({ type: String })
@@ -14,20 +14,27 @@ export class NFTLog {
   @Prop()
   tokenId: number;
 
-  @Prop({ default: '' })
-  NFTname: string;
+  @Prop({ default: "" })
+  from: string;
 
-  @Prop({ default: '' })
-  FNFTname: string;
+  @Prop({ default: "" })
+  to: string;
 
-  @Prop()
+  @Prop({ default: "" })
   contractAddress: string;
 
-  @Prop({ type: String })
-  removedBy?: string;
+  @Prop({ default: "" })
+  transactionHash: string;
 
-  @Prop({ type: Date })
-  removedOn?: Date;
+  @Prop({ default: "" })
+  chainId: string;
+
+  @Prop({ default: "" })
+  recordId: string;
+
+  @Prop({ default: "" })
+  eventName: string;
+
 }
 
 export const NFTLogSchema = SchemaFactory.createForClass(NFTLog);
