@@ -18,8 +18,11 @@ export class Land {
   @Prop({ type: Number })
   version: number;
 
-  @Prop({ type: Number })
-  ownerId: number;
+  @Prop({ type: String })
+  ownerId: string;
+
+  @Prop({ type: String })
+  landOwnerAddress: string;
 }
 
 export type LandDocument = Land & Document;

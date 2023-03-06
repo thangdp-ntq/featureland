@@ -35,166 +35,32 @@ export class NftService {
   ) {}
 
   async getNfts({ pageSize = 10, page = 1, ...getParams }): Promise<any> {
-    const match: Record<string, any> = {
-      deleted: false,
-      status: { $not: { $regex: Utils.escapeRegex("processing") } },
-    };
+    const match: Record<string, any> = {};
+    if (getParams.tokenId) {
+      match["tokenId"] = getParams.tokenId;
+    }
+    if (getParams.landId) {
+      match["landId"] = getParams.landId;
+    }
+    if (getParams.ownerAddress) {
+      match["ownerId"] = getParams.ownerAddress;
+    }
     const sort: Record<string, any> = {};
-
-    if (getParams.isDeleted) {
-      match["deleted"] = true;
-    }
-
-    if (getParams.hasOwnProperty("status")) {
-      Object.assign(match, {
-        ...match,
-        status: { $in: [getParams.status] },
-      });
-    }
-    if (getParams.hasOwnProperty("textSearch")) {
-      Object.assign(match, {
-        ...match,
-        $or: [
-          {
-            NFTname: {
-              $regex: Utils.escapeRegex(getParams.textSearch.trim()),
-              $options: "i",
-            },
-          },
-          {
-            tokenId: Number(getParams.textSearch.trim()),
-          },
-        ],
-      });
-    }
 
     if (getParams.sortField && getParams.sortType) {
       sort[getParams.sortField] =
         SORT_AGGREGATE[getParams.sortType.toUpperCase()];
     } else {
-      if (getParams.isDeleted) {
-        sort["deletedOn"] = SORT_AGGREGATE.DESC;
-      } else {
-        sort["createdAt"] = SORT_AGGREGATE.DESC;
-      }
+      sort["createdAt"] = SORT_AGGREGATE.DESC;
     }
     const piline: PipelineStage[] = [];
-    // if(getParams.hasFNFTPool) {
-    //   piline.push({
-    //     $match: {status
-    //       ...match,
-    //       FNFTPool: { $ne: []},
-    //     },
-    //   })
-    // }
-    if (getParams.hasFNFTPool === undefined) {
-      piline.push({
-        $match: {
-          ...match,
-        },
-      });
-    }
-    if (getParams.hasFNFTPool == false) {
-      piline.push({
-        $match: {
-          ...match,
-          FNFTPool: [],
-        },
-      });
-    }
-    piline.push({
-      $lookup: {
-        from: "User",
-        let: { id: "$createdBy" },
-        pipeline: [
-          { $match: { $expr: { $eq: ["$address", "$$id"] } } },
-          {
-            $project: {
-              username: 1,
-              address: 1,
-            },
-          },
-        ],
-        as: "createdBy",
-      },
-    });
-    piline.push({
-      $lookup: {
-        from: "User",
-        let: { id: "$updatedBy" },
-        pipeline: [
-          { $match: { $expr: { $eq: ["$address", "$$id"] } } },
-          {
-            $project: {
-              username: 1,
-              address: 1,
-            },
-          },
-        ],
-        as: "updatedBy",
-      },
-    });
-    piline.push({
-      $lookup: {
-        from: "User",
-        let: { id: "$fractionalizeBy" },
-        pipeline: [
-          { $match: { $expr: { $eq: ["$address", "$$id"] } } },
-          {
-            $project: {
-              username: 1,
-              address: 1,
-            },
-          },
-        ],
-        as: "fractionalizeBy",
-      },
-    });
-    piline.push({
-      $lookup: {
-        from: "User",
-        let: { id: "$deletedBy" },
-        pipeline: [
-          { $match: { $expr: { $eq: ["$address", "$$id"] } } },
-          {
-            $project: {
-              username: 1,
-              address: 1,
-            },
-          },
-        ],
-        as: "deletedBy",
-      },
-    });
-    piline.push(
-      { $unwind: { path: "$createdBy", preserveNullAndEmptyArrays: true } },
-      { $unwind: { path: "$updatedBy", preserveNullAndEmptyArrays: true } },
-      {
-        $unwind: { path: "$fractionalizeBy", preserveNullAndEmptyArrays: true },
-      },
-      { $unwind: { path: "$deletedBy", preserveNullAndEmptyArrays: true } }
-    );
 
     piline.push({
-      $project: {
-        NFTname: 1,
-        createdAt: 1,
-        _id: 1,
-        status: 1,
-        imageURL: 1,
-        tokenId: 1,
-        nftTransactionHash: 1,
-        fNFTTransactionHash: 1,
-        metaDataFields: 1,
-        createdBy: 1,
-        updatedAt: 1,
-        updatedBy: 1,
-        deletedOn: 1,
-        deletedBy: 1,
-        fractionalizeBy: 1,
-        fractionalizeOn: 1,
+      $match: {
+        ...match,
       },
     });
+
     const $facet: any = {
       pageInfo: [{ $count: "totalItem" }],
       items: [
@@ -241,6 +107,7 @@ export class NftService {
 
   async findOne(id: number) {
     const nft = await this.nftModel.findOne({ tokenId: id });
+    return nft
   }
 
   async TranferNft(data) {
@@ -259,7 +126,7 @@ export class NftService {
       });
     }
     await this.logModel.create({
-      data:JSON.stringify(data),
+      data: JSON.stringify(data),
       tokenId: data.metadata.tokenId,
       from: data.metadata.from,
       to: data.metadata.to,

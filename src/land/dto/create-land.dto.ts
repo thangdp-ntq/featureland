@@ -1,13 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Transform, TransformFnParams } from "class-transformer";
+import { IsOptional } from "class-validator";
 
 export class AddNFTDto {
+  @IsOptional()
   @ApiProperty({
-    required: true,
-    nullable: false,
     type: String,
     example: [1, 2, 3],
   })
-  tokenIds: string;
+  tokenIds: number[];
 }
 
 export class RemoveNFTDto {

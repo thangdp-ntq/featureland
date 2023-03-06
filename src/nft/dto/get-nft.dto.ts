@@ -22,7 +22,7 @@ export class GetNFT {
   ownerAddress: string;
 
   @ApiProperty({
-    example: 'F',
+    example: '',
     required: false,
     description:
       'if you send this params up, will return about nfts same landId,params not required',
@@ -71,7 +71,7 @@ export class GetNFT {
   sortType: sortType;
 
   @ApiProperty({
-    example: 'NFTname',
+    example: 'createdAt',
     enum: [
       'createdAt',
       'tokenId',
