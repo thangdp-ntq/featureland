@@ -16,6 +16,7 @@ import { RegionModule } from './region/region.module';
 import { LandModule } from './land/land.module';
 import { RedisClientOptions } from 'redis';
 import * as redisStore from 'cache-manager-redis-store';
+import { WebhookModule } from './webhook/webhook.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import * as redisStore from 'cache-manager-redis-store';
    CommonModule,
    RegionModule,
    LandModule,
+   WebhookModule
   ],
   providers: [
     {

@@ -11,23 +11,30 @@ import { SignerService } from '../signer/signer.service';
 import { CommonService } from '~/common-service/common.service';
 import { CommonModule } from '~/common-service/common.module';
 import { EmailModule } from '~/services/email/email.module';
+import { PriceToken, PriceTokenSchema } from '~/schemas/price-token.schema';
+import { TimeSetting, TimeSettingSchema } from '~/schemas/time-setting.schema';
+import { NFT, NFTSchema, User, UserSchema } from '~/schemas';
+import { NFTLog, NFTLogSchema } from '~/schemas/nft-log.schema';
 
 @Module({
   imports: [
     WinstonModule,
-    MongooseModule.forFeature(),
+    MongooseModule.forFeature([
+      { name: PriceToken.name, schema: PriceTokenSchema },
+      { name: TimeSetting.name, schema: TimeSettingSchema },
+      { name: NFT.name, schema: NFTSchema },
+      { name: User.name, schema: UserSchema },
+      { name: NFTLog.name, schema: NFTLogSchema },
+    ]),
     CommonModule,
-    EmailModule,
   ],
   controllers: [WebhookController],
   providers: [
     WebhookService,
-    UploadService,
-    NftService,
     EventsGateway,
     ValidateAddressWalletService,
-    SignerService,
     CommonService,
+    NftService
   ],
 })
 export class WebhookModule {}

@@ -8,17 +8,7 @@ import mongoose from 'mongoose';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 export enum WEBHOOK_TYPE {
-  MINT_NFT = 'MintNFT',
-  F_NFT = 'FractionalizeNFT',
-  MINT_F_NFT_POOL = 'CreateFNFTPool',
-  CREATE_TIER_POOL_EVENT = 'CreateTierPool',
-  CREATE_REWARD_POOL_EVENT = 'CreateRewardPool',
-  PURCHASE_F_NFT_EVENT = 'PurchaseFNFT',
-  STAKE_EVENT = 'StakeTierPool',
-  UN_STAKE_EVENT = 'UnStakeTierPool',
-  ADMIN_SET = 'AdminSet',
-  CLAIM_EVENT = 'ClaimReward',
-  WITHDRAW_FUN = 'WithdrawFun',
+  Transfer='Transfer',
 }
 
 @Injectable()
@@ -26,6 +16,7 @@ export class WebhookService {
   private readonly loggerConsole = new Logger(WebhookService.name);
   constructor(
     private readonly eventsGateway: EventsGateway,
+    private nftService: NftService,
     @InjectConnection() private readonly connection: mongoose.Connection,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
@@ -35,8 +26,8 @@ export class WebhookService {
     );
     try {
       switch (data.eventName) {
-        case WEBHOOK_TYPE.MINT_NFT:
-          await this.processMintNFTDone(data);
+        case WEBHOOK_TYPE.Transfer:
+          await this.processTransferNFTDone(data);
           break;
       }
     } catch (error) {
@@ -46,9 +37,11 @@ export class WebhookService {
     return new ApiSuccessResponse<unknown>().success({}, '');
   }
 
-  async processMintNFTDone(data) {
+
+  async processTransferNFTDone(data) {
+    console.log(data)
     try {
-      // await this.nftService.updateNFTWhenMintSuccess(data._tokenId, data);
+      await this.nftService.TranferNft(data);
       this.eventsGateway.sendMessage(EVENT_SOCKET.MINT_NFT_EVENT, data);
       this.logger.debug('MintNFT successfully, data:: ' + JSON.stringify(data));
     } catch (error) {
@@ -58,6 +51,5 @@ export class WebhookService {
       throw error;
     }
   }
-
   
 }

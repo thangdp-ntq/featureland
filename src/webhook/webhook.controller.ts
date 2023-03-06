@@ -13,13 +13,12 @@ import { WebhookService } from './webhook.service';
 @Controller('webhook')
 export class WebhookController {
   constructor(private readonly webhookService: WebhookService) {}
-
   @Post()
   @HttpCode(HttpStatus.OK)
   @ApiExcludeEndpoint()
-  @UseGuards(JwtTokenGuard)
   async webhook(@Body() data: any) {
     try {
+      console.log(data)
       return await this.webhookService.processWebhook(data);
     } catch (error) {
       throw error;

@@ -1,11 +1,11 @@
-import { NFTLog, NFTLogDocument } from './../schemas/nft-log.schema';
-import {  User, UserDocument } from '~/schemas';
-import { HttpStatus, Injectable } from '@nestjs/common';
-import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { NFT, NFTDocument } from '../schemas/NFT.schema';
-import { CreateNftDto } from './dto/create-nft.dto';
-import { FractionalizeNFT, UpdateNftDto } from './dto/update-nft.dto';
-import { Model, Connection } from 'mongoose';
+import { NFTLog, NFTLogDocument } from "./../schemas/nft-log.schema";
+import { User, UserDocument } from "~/schemas";
+import { HttpStatus, Injectable } from "@nestjs/common";
+import { InjectConnection, InjectModel } from "@nestjs/mongoose";
+import { NFT, NFTDocument } from "../schemas/NFT.schema";
+import { CreateNftDto } from "./dto/create-nft.dto";
+import { FractionalizeNFT, UpdateNftDto } from "./dto/update-nft.dto";
+import { Model, Connection } from "mongoose";
 import {
   API_ERROR,
   API_SUCCESS,
@@ -15,15 +15,15 @@ import {
   WEBHOOK_EXCEPTION,
   MIMEType,
   DECIMALS_DAD,
-} from '../common/constants';
+} from "../common/constants";
 
-import { Utils } from '../common/utils';
-import { UploadService } from '../upload/upload.service';
-import BigNumber from 'bignumber.js';
-import { ErrorDetail } from '../common/responses/api-error';
-import { PipelineStage } from 'mongoose';
-import { AwsUtils } from '~/common/aws.util';
-import { HttpError } from '~/common/responses/api-errors';
+import { Utils } from "../common/utils";
+import { UploadService } from "../upload/upload.service";
+import BigNumber from "bignumber.js";
+import { ErrorDetail } from "../common/responses/api-error";
+import { PipelineStage } from "mongoose";
+import { AwsUtils } from "~/common/aws.util";
+import { HttpError } from "~/common/responses/api-errors";
 
 @Injectable()
 export class NftService {
@@ -31,35 +31,34 @@ export class NftService {
     @InjectModel(NFT.name) private nftModel: Model<NFTDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(NFTLog.name) private logModel: Model<NFTLogDocument>,
-    @InjectConnection() private readonly connection: Connection,
+    @InjectConnection() private readonly connection: Connection
   ) {}
-
 
   async getNfts({ pageSize = 10, page = 1, ...getParams }): Promise<any> {
     const match: Record<string, any> = {
       deleted: false,
-      status: { $not: { $regex: Utils.escapeRegex('processing') } },
+      status: { $not: { $regex: Utils.escapeRegex("processing") } },
     };
     const sort: Record<string, any> = {};
 
     if (getParams.isDeleted) {
-      match['deleted'] = true;
+      match["deleted"] = true;
     }
 
-    if (getParams.hasOwnProperty('status')) {
+    if (getParams.hasOwnProperty("status")) {
       Object.assign(match, {
         ...match,
         status: { $in: [getParams.status] },
       });
     }
-    if (getParams.hasOwnProperty('textSearch')) {
+    if (getParams.hasOwnProperty("textSearch")) {
       Object.assign(match, {
         ...match,
         $or: [
           {
             NFTname: {
               $regex: Utils.escapeRegex(getParams.textSearch.trim()),
-              $options: 'i',
+              $options: "i",
             },
           },
           {
@@ -74,9 +73,9 @@ export class NftService {
         SORT_AGGREGATE[getParams.sortType.toUpperCase()];
     } else {
       if (getParams.isDeleted) {
-        sort['deletedOn'] = SORT_AGGREGATE.DESC;
+        sort["deletedOn"] = SORT_AGGREGATE.DESC;
       } else {
-        sort['createdAt'] = SORT_AGGREGATE.DESC;
+        sort["createdAt"] = SORT_AGGREGATE.DESC;
       }
     }
     const piline: PipelineStage[] = [];
@@ -105,10 +104,10 @@ export class NftService {
     }
     piline.push({
       $lookup: {
-        from: 'User',
-        let: { id: '$createdBy' },
+        from: "User",
+        let: { id: "$createdBy" },
         pipeline: [
-          { $match: { $expr: { $eq: ['$address', '$$id'] } } },
+          { $match: { $expr: { $eq: ["$address", "$$id"] } } },
           {
             $project: {
               username: 1,
@@ -116,15 +115,15 @@ export class NftService {
             },
           },
         ],
-        as: 'createdBy',
+        as: "createdBy",
       },
     });
     piline.push({
       $lookup: {
-        from: 'User',
-        let: { id: '$updatedBy' },
+        from: "User",
+        let: { id: "$updatedBy" },
         pipeline: [
-          { $match: { $expr: { $eq: ['$address', '$$id'] } } },
+          { $match: { $expr: { $eq: ["$address", "$$id"] } } },
           {
             $project: {
               username: 1,
@@ -132,15 +131,15 @@ export class NftService {
             },
           },
         ],
-        as: 'updatedBy',
+        as: "updatedBy",
       },
     });
     piline.push({
       $lookup: {
-        from: 'User',
-        let: { id: '$fractionalizeBy' },
+        from: "User",
+        let: { id: "$fractionalizeBy" },
         pipeline: [
-          { $match: { $expr: { $eq: ['$address', '$$id'] } } },
+          { $match: { $expr: { $eq: ["$address", "$$id"] } } },
           {
             $project: {
               username: 1,
@@ -148,15 +147,15 @@ export class NftService {
             },
           },
         ],
-        as: 'fractionalizeBy',
+        as: "fractionalizeBy",
       },
     });
     piline.push({
       $lookup: {
-        from: 'User',
-        let: { id: '$deletedBy' },
+        from: "User",
+        let: { id: "$deletedBy" },
         pipeline: [
-          { $match: { $expr: { $eq: ['$address', '$$id'] } } },
+          { $match: { $expr: { $eq: ["$address", "$$id"] } } },
           {
             $project: {
               username: 1,
@@ -164,16 +163,16 @@ export class NftService {
             },
           },
         ],
-        as: 'deletedBy',
+        as: "deletedBy",
       },
     });
     piline.push(
-      { $unwind: { path: '$createdBy', preserveNullAndEmptyArrays: true } },
-      { $unwind: { path: '$updatedBy', preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: "$createdBy", preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: "$updatedBy", preserveNullAndEmptyArrays: true } },
       {
-        $unwind: { path: '$fractionalizeBy', preserveNullAndEmptyArrays: true },
+        $unwind: { path: "$fractionalizeBy", preserveNullAndEmptyArrays: true },
       },
-      { $unwind: { path: '$deletedBy', preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: "$deletedBy", preserveNullAndEmptyArrays: true } }
     );
 
     piline.push({
@@ -197,7 +196,7 @@ export class NftService {
       },
     });
     const $facet: any = {
-      pageInfo: [{ $count: 'totalItem' }],
+      pageInfo: [{ $count: "totalItem" }],
       items: [
         { $sort: sort },
         { $skip: page <= 1 ? 0 : (page - 1) * pageSize },
@@ -213,7 +212,7 @@ export class NftService {
     }
     const items = await this.nftModel
       .aggregate(piline)
-      .collation({ locale: 'en_US', strength: 1 });
+      .collation({ locale: "en_US", strength: 1 });
     if (!items.length) {
       return {
         items: [],
@@ -242,6 +241,19 @@ export class NftService {
 
   async findOne(id: number) {
     const nft = await this.nftModel.findOne({ tokenId: id });
-    
+  }
+
+  async TranferNft(data) {
+    console.log(data)
+    const nft = await this.nftModel.findOne({ tokenId: data.id });
+    if (nft) {
+     await this.nftModel.updateOne({ id: nft.id }, { ownerId: data.ownerId });
+    } else {
+      await this.nftModel.create({
+        ownerId: "",
+        tokenId: "",
+      });
+    }
+    return true;
   }
 }
