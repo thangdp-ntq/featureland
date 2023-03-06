@@ -21,15 +21,15 @@ export class LandService {
 
   async addNft(id: string, tokens, address) {
     const land = await this.landCollection.findOne({id})
-    if(land.ownerId){
+    if(land.ownerAddress){
       throw "Land has owner";
     }
 
-    if(land.landOwnerAddress!==address){
+    if(land.useAddNftAddress!==address){
       throw "Land has owner";
     }
     const nfts = await this.nftModel.find({ tokenId: { $in: tokens } });
-    const isOwner = nfts.filter((nft) => nft.ownerId !== address);
+    const isOwner = nfts.filter((nft) => nft.ownerAddress !== address);
     if (isOwner.length > 0) {
       throw "Not Permission";
     }

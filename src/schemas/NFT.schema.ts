@@ -57,7 +57,7 @@ export class NFT {
     example: "0xe4Fd432b16c9b1c1E86d0A359fdC270c5E89258d",
   })
   @Prop({default:''})
-  ownerId: string;
+  ownerAddress: string;
 
 }
 export const NFTSchema = SchemaFactory.createForClass(NFT);

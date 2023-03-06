@@ -19,10 +19,10 @@ export class Land {
   version: number;
 
   @Prop({ type: String })
-  ownerId: string;
+  ownerAddress: string;
 
   @Prop({ type: String })
-  landOwnerAddress: string;
+  useAddNftAddress: string;
 }
 
 export type LandDocument = Land & Document;

@@ -43,7 +43,7 @@ export class NftService {
       match["landId"] = getParams.landId;
     }
     if (getParams.ownerAddress) {
-      match["ownerId"] = getParams.ownerAddress;
+      match["ownerAddress"] = getParams.ownerAddress;
     }
     const sort: Record<string, any> = {};
 
@@ -117,11 +117,11 @@ export class NftService {
     if (nft) {
       await this.nftModel.updateOne(
         { id: nft.id },
-        { ownerId: data.metadata.to }
+        { ownerAddress: data.metadata.to }
       );
     } else {
       await this.nftModel.create({
-        ownerId: data.metadata.to,
+        ownerAddress: data.metadata.to,
         tokenId: Number(data.metadata.tokenId),
       });
     }
