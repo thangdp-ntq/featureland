@@ -244,7 +244,6 @@ export class NftService {
   }
 
   async TranferNft(data) {
-    console.log(data);
     const nft = await this.nftModel.findOne({
       tokenId: Number(data.metadata.tokenId),
     });

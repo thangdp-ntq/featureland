@@ -18,9 +18,7 @@ export class WebhookController {
   @ApiExcludeEndpoint()
   async webhook(@Body() data: any) {
     try {
-      console.log(data)
-       await this.webhookService.processWebhook(data);
-      throw 1;
+     return await this.webhookService.processWebhook(data);
     } catch (error) {
       throw error;
     }

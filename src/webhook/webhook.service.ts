@@ -39,7 +39,6 @@ export class WebhookService {
 
 
   async processTransferNFTDone(data) {
-    console.log('data',data)
     try {
       await this.nftService.TranferNft(data);
       //this.eventsGateway.sendMessage(EVENT_SOCKET.MINT_NFT_EVENT, data);
