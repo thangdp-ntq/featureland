@@ -73,10 +73,10 @@ export class GetLand {
     sortType: sortType;
   
     @ApiProperty({
-      example: 'NFTname',
+      example: 'numberNfts',
       enum: [
         'createdAt',
-        'numberNft',
+        'numberNfts',
       ],
       required: false,
       description:
@@ -84,20 +84,12 @@ export class GetLand {
     })
     @IsOptional()
     @IsEnum([
-      '_id',
       'createdAt',
-      'NFTname',
-      'fractionalizeOn',
-      'deletedOn',
-      'tokenId',
+      'numberNfts',
     ])
     @IsIn([
-      '_id',
       'createdAt',
-      'NFTname',
-      'fractionalizeOn',
-      'deletedOn',
-      'tokenId',
+      'numberNfts',
     ])
     sortField: string;
   }

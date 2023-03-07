@@ -23,6 +23,9 @@ export class Land {
 
   @Prop({ type: String })
   useAddNftAddress: string;
+
+  @Prop({ type: String })
+  description: string;
 }
 
 export type LandDocument = Land & Document;

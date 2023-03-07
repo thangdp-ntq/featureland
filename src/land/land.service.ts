@@ -18,6 +18,9 @@ export class LandService {
     if (getParams.regionId) {
       match["regionId"] = getParams.regionId;
     }
+    if (getParams.ownerAddress) {
+      match["ownerAddress"] = getParams.ownerAddress;
+    }
     const sort: Record<string, any> = {};
 
     if (getParams.sortField && getParams.sortType) {
@@ -26,6 +29,7 @@ export class LandService {
     } else {
       sort["createdAt"] = SORT_AGGREGATE.DESC;
     }
+    console.log(sort)
     const piline: PipelineStage[] = [];
 
     piline.push({
@@ -90,7 +94,8 @@ export class LandService {
           numberNfts:0,
           version:element1+1,
           ownerAddress:'',
-          useAddNftAddress:''
+          useAddNftAddress:'',
+          description:''
         })
       }
       

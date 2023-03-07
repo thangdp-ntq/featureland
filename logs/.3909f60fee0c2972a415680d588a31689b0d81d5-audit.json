@@ -29,6 +29,11 @@
             "date": 1678122522855,
             "name": "logs/api-2023-03-07.log",
             "hash": "6460942dd9afe86b0fef5b7b7b1492a9"
+        },
+        {
+            "date": 1678208555830,
+            "name": "logs/api-2023-03-08.log",
+            "hash": "e838a78f8c63ec71bf165cf4525462ca"
         }
     ],
     "hashType": "md5"
