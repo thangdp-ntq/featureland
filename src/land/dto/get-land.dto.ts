@@ -22,6 +22,16 @@ export class GetLand {
     ownerAddress: string;
 
     @ApiProperty({
+      required: false,
+      description:
+        'if you send this params up, will return about nfts same ownerAddress,params not required',
+    })
+    @IsOptional()
+    @IsString()
+    @MaxLength(255)
+    regionId: string;
+
+    @ApiProperty({
         required: false,
         description:
           'if you send this params up, will return about nfts same hasOwner,params not required',

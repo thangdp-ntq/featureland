@@ -18,6 +18,7 @@ import { GetNFTSResponse } from "~/nft/dto/response.dto";
 import { GetLand } from "./dto/get-land.dto";
 import { API_SUCCESS, CommonCode } from "~/common/constants";
 import { Web3Guard } from "~/auth/web3.guard";
+import { HttpError } from "~/common/responses/api-errors";
 
 @ApiTags("Land")
 @Controller("land")
@@ -29,8 +30,9 @@ export class LandController {
   @ApiOperation({
     summary: "Get All Land",
   })
-  findAll(@Query() getParams: GetLand) {
-    return this.landService.findAll();
+  async findAll(@Query() getParams: GetLand) {
+    const lands = await this.landService.findAll({ ...getParams });
+    return GetNFTSResponse.success(lands);
   }
 
   @Get(":id")
@@ -69,8 +71,21 @@ export class LandController {
       },
     },
   })
-  addNft(@Param("id") id: string, @Body() tokenIds: AddNFTDto, @Req() req) {
-    return this.landService.addNft(id, tokenIds.tokenIds, req.address);
+  async addNft(
+    @Param("id") id: string,
+    @Body() tokenIds: AddNFTDto,
+    @Req() req
+  ) {
+    try {
+      const res = await this.landService.addNft(
+        id,
+        tokenIds.tokenIds,
+        req.address
+      );
+      return res;
+    } catch (error) {
+      throw HttpError.error(HttpStatus.BAD_REQUEST, error, []);
+    }
   }
 
   // @Post(":id/remove-nft")
