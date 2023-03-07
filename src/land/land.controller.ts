@@ -35,6 +35,11 @@ export class LandController {
     return GetNFTSResponse.success(lands);
   }
 
+  @Post('dump')
+  dummyData(){
+    return this.landService.dumpData()
+  }
+
   @Get(":id")
   @ApiResponse({
     status: HttpStatus.OK,

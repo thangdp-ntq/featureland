@@ -78,7 +78,24 @@ export class LandService {
     }
   }
 
-  
+  async dumpData(){
+    const regionIds =['64061c18e99d261694183c13','64061c53e99d261694183c4a','64061c5ae99d261694183c63','64061c62e99d261694183c77','64061c6ee99d261694183c8e']
+    for (let index = 0; index < regionIds.length; index++) {
+      const element = regionIds[index]
+      for (let index1 = 0; index1 < 2000; index1++) {
+        const element1 = index1;
+        await this.landCollection.create({
+          regionId:element,
+          image:`http://139.177.189.219:5001/images/land${index1%4+1}.png`,
+          numberNfts:0,
+          version:element1+1,
+          ownerAddress:'',
+          useAddNftAddress:''
+        })
+      }
+      
+    }
+  }
 
 
   findOne(id: string) {
