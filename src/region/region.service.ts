@@ -17,7 +17,7 @@ export class RegionService {
 
   async findOne({id}) {
     const region = await this.regionCollection.findById(ObjectID(id.id))
-    const lands = await this.landCollection.find({_id:id})
+    // const lands = await this.landCollection.find({_id:id})
     return {...region, avalible:2000, totalNft:0}
   }
 }

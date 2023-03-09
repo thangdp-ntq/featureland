@@ -19,6 +19,7 @@ import { GetLand } from "./dto/get-land.dto";
 import { API_SUCCESS, CommonCode } from "~/common/constants";
 import { Web3Guard } from "~/auth/web3.guard";
 import { HttpError } from "~/common/responses/api-errors";
+import { ApiSuccessResponse } from "~/common/responses/api-success";
 
 @ApiTags("Land")
 @Controller("land")
@@ -57,8 +58,9 @@ export class LandController {
   @ApiOperation({
     summary: "Get Region by Id",
   })
-  findOne1(@Param("id") id: string) {
-    return this.landService.topOwner(id);
+  async topOwner(@Param("id") id: string) {
+    const  topOwner = await this.landService.topOwner(id);
+    return new ApiSuccessResponse<unknown>().success(topOwner, "");
   }
 
   @Get(":id")
