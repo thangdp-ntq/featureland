@@ -40,6 +40,27 @@ export class LandController {
   //   return this.landService.dumpData()
   // }
 
+  @Get(":id/top-owner")
+  @ApiResponse({
+    status: HttpStatus.OK,
+    schema: {
+      properties: {
+        code: { type: "string", example: API_SUCCESS },
+        message: {
+          type: "string",
+          example: CommonCode.DEFAULT_SUCCESS_MESSAGE,
+        },
+        data: { type: "object", example: {} },
+      },
+    },
+  })
+  @ApiOperation({
+    summary: "Get Region by Id",
+  })
+  findOne1(@Param("id") id: string) {
+    return this.landService.topOwner(id);
+  }
+
   @Get(":id")
   @ApiResponse({
     status: HttpStatus.OK,
@@ -58,6 +79,7 @@ export class LandController {
     summary: "Get Region by Id",
   })
   findOne(@Param("id") id: string) {
+    console.log(83)
     return this.landService.findOne(id);
   }
 

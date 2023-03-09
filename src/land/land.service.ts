@@ -107,6 +107,23 @@ export class LandService {
     return this.landCollection.findOne({ id });
   }
 
+  topOwner(id: string) {
+    return this.landCollection.aggregate([
+      {
+        $group:
+          {
+            _id: "$ownerAddress",
+            count:{$sum:1}
+          }
+       },
+       {
+        $match: { "ownerAddress": { $ne: "" } }
+       },
+       {$sort:{"count":-1}}
+    ]);
+  }
+
+
   async addNft(id: string, tokens, address) {
     console.log(id);
     const land = await this.landCollection.findOne({ _id: id });
