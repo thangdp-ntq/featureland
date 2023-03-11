@@ -19,9 +19,9 @@ export class RegionService {
   }
 
   async findOne({ id }) {
-    const region = await this.regionCollection.findById(ObjectID(id.id));
-    const lands = await this.landCollection.find({ regionId: id.id });
-    const nfts = await this.nftModel.find({ regionId: id.id });
+    const region = await this.regionCollection.findById(ObjectID(id));
+    const lands = await this.landCollection.find({ regionId: id });
+    const nfts = await this.nftModel.find({ regionId: id });
     const totalOwner = new Set(lands.map((e) => e.ownerAddress)).size;
     return { ...region["_doc"], totalOwner: totalOwner, totalNft: nfts.length };
   }

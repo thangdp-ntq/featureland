@@ -137,9 +137,7 @@ export class LandService {
   }
 
   async addNft(id: string, tokens, address) {
-    console.log(id);
     const land = await this.landCollection.findOne({ _id: id });
-    console.log(land);
     if (!land) {
       throw "Land not found";
     }
@@ -149,7 +147,7 @@ export class LandService {
     if (land.useAddNftAddress && land.useAddNftAddress !== address) {
       throw "you wallet cannot add nft0";
     }
-    // update nft status
+    // update nft
     const update = await this.nftModel.updateMany(
       { tokenId: { $in: tokens }, landId: "", ownerAddress: address },
       {
@@ -198,6 +196,23 @@ export class LandService {
     if (land.ownerAddress) {
       throw "Land has owner";
     }
+    const update = await this.nftModel.updateMany(
+      { tokenId: { $in: tokens }, landId: id, ownerAddress: address },
+      {
+        landId: '',
+        regionId:'',
+      }
+    );
+    const nftOfLand = await this.nftModel.find({
+      landId: id,
+    });
+
+    const updateLand = await this.landCollection.updateOne(
+      { _id: ObjectID(id) },
+      {
+        numberNfts: nftOfLand.length,
+      }
+    );
     return await this.landCollection.findOne({ _id: id });
   }
 }

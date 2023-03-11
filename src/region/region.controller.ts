@@ -31,11 +31,12 @@ export class RegionController {
   }
 
   @ApiOperation({
-    summary: "Get All Region",
+    summary: "Get  Region",
   })
   @ApiResponse({ status: HttpStatus.OK, type: GetNFTSResponse })
   @Get(':id')
-  async findOne(@Param() id: string) {
+  async findOne(@Param("id") id: string) {
+    console.log(id)
     const region = await this.regionService.findOne({id});
     return new ApiSuccessResponse<unknown>().success(region, "");
   }
