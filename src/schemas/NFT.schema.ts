@@ -48,17 +48,22 @@ export class NFT {
     type: "string",
     example: "0xe4Fd432b16c9b1c1E86d0A359fdC270c5E89258d",
   })
-  @Prop({default:''})
+  @Prop({ default: "" })
   landId: string;
-
 
   @ApiProperty({
     type: "string",
     example: "0xe4Fd432b16c9b1c1E86d0A359fdC270c5E89258d",
   })
-  @Prop({default:''})
+  @Prop({ default: "" })
   ownerAddress: string;
 
+  @ApiProperty({
+    type: "string",
+    example: "0xe4Fd432b16c9b1c1E86d0A359fdC270c5E89258d",
+  })
+  @Prop({ default: "" })
+  regionId: string;
 }
 export const NFTSchema = SchemaFactory.createForClass(NFT);
 NFTSchema.plugin(paginate);

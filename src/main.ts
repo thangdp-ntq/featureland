@@ -16,12 +16,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: process.env.LOG_LEVEL.split(',') as LogLevel[],
   });
-  app.enableCors({
-    origin: process.env.ORIGIN?.split(','),
-    methods: process.env.METHODS?.split(','),
-    credentials: true,
-    
-  });
+  app.enableCors();
   app.startAllMicroservices();
 
   app.useGlobalPipes(

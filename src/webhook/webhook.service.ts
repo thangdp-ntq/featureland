@@ -21,6 +21,7 @@ export class WebhookService {
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
   async processWebhook(data: any) {
+    console.log(data)
     this.logger.debug(
       `WebhookService data receive, data=${JSON.stringify(data)}`,
     );

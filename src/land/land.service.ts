@@ -4,7 +4,8 @@ import { Land, LandDocument } from "~/schemas/land.schema";
 import { Model } from "mongoose";
 import { NFT, NFTDocument } from "~/schemas";
 import { PipelineStage } from "mongoose";
-import { SORT_AGGREGATE } from "~/common/constants";
+import { NUMBER_NFT_TO_ADD_NFT, NUMBER_NFT_TO_OWNER, SORT_AGGREGATE } from "~/common/constants";
+import ObjectID from "bson-objectid";
 
 @Injectable()
 export class LandService {
@@ -29,7 +30,7 @@ export class LandService {
     } else {
       sort["createdAt"] = SORT_AGGREGATE.DESC;
     }
-    console.log(sort)
+    console.log(sort);
     const piline: PipelineStage[] = [];
 
     piline.push({
@@ -82,47 +83,58 @@ export class LandService {
     }
   }
 
-  async dumpData(){
-    const regionIds =['64061c18e99d261694183c13','64061c53e99d261694183c4a','64061c5ae99d261694183c63','64061c62e99d261694183c77','64061c6ee99d261694183c8e']
+  async dumpData() {
+    const regionIds = [
+      "64061c18e99d261694183c13",
+      "64061c53e99d261694183c4a",
+      "64061c5ae99d261694183c63",
+      "64061c62e99d261694183c77",
+      "64061c6ee99d261694183c8e",
+    ];
     for (let index = 0; index < regionIds.length; index++) {
-      const element = regionIds[index]
+      const element = regionIds[index];
       for (let index1 = 0; index1 < 2000; index1++) {
         const element1 = index1;
         await this.landCollection.create({
-          regionId:element,
-          image:`http://139.177.189.219:5001/images/land${index1%4+1}.png`,
-          numberNfts:0,
-          version:element1+1,
-          ownerAddress:'',
-          useAddNftAddress:'',
-          description:''
-        })
+          regionId: element,
+          image: `http://139.177.189.219:5001/images/land${
+            (index1 % 4) + 1
+          }.png`,
+          numberNfts: 0,
+          version: element1 + 1,
+          ownerAddress: "",
+          useAddNftAddress: "",
+          description: "",
+        });
       }
-      
     }
   }
-
 
   findOne(id: string) {
     return this.landCollection.findOne({ id });
   }
 
-  topOwner(id: string) {
+  topLand(id: string) {
     return this.landCollection.aggregate([
-      {
-        $group:
-          {
-            _id: "$ownerAddress",
-            count:{$sum:1}
-          }
-       },
-       {
-        $match: { "ownerAddress": { $ne: "" } }
-       },
-       {$sort:{"count":-1}}
+      { $sort: { numberNfts: -1 } },
+      { $sort: { updatedAt: -1 } },
     ]);
   }
 
+  topOwner(id: string) {
+    return this.landCollection.aggregate([
+      {
+        $group: {
+          _id: "$ownerAddress",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $match: { ownerAddress: { $ne: "" } },
+      },
+      { $sort: { count: -1 } },
+    ]);
+  }
 
   async addNft(id: string, tokens, address) {
     console.log(id);
@@ -137,33 +149,54 @@ export class LandService {
     if (land.useAddNftAddress && land.useAddNftAddress !== address) {
       throw "you wallet cannot add nft0";
     }
-
+    // update nft status
     const update = await this.nftModel.updateMany(
       { tokenId: { $in: tokens }, landId: "", ownerAddress: address },
       {
         landId: id,
+        regionId: land.regionId,
       }
     );
-    console.log(update);
+    //find nfts
     const nfts = await this.nftModel.find({
       landId: id,
       ownerAddress: address,
     });
-    if (nfts.length >= 200 && nfts.length < 500) {
+    if (nfts.length >= NUMBER_NFT_TO_ADD_NFT && nfts.length < NUMBER_NFT_TO_OWNER) {
       const updateLand = await this.landCollection.updateOne(
-        { _id: id },
+        { _id: ObjectID(id) },
         {
           useAddNftAddress: address,
         }
       );
     }
-    if (nfts.length === 500) {
+    if (nfts.length === NUMBER_NFT_TO_OWNER) {
       const updateLand = await this.landCollection.updateOne(
-        { _id: id },
+        { _id: ObjectID(id) },
         {
           ownerAddress: address,
         }
       );
+    }
+    const nftOfLand = await this.nftModel.find({
+      landId: id,
+    });
+
+    const updateLand = await this.landCollection.updateOne(
+      { _id: ObjectID(id) },
+      {
+        numberNfts: nftOfLand.length,
+      }
+    );
+    return await this.landCollection.findOne({ _id: id });
+  }
+  async removeNft(id: string, tokens, address) {
+    const land = await this.landCollection.findOne({ _id: id });
+    if (!land) {
+      throw "Land not found";
+    }
+    if (land.ownerAddress) {
+      throw "Land has owner";
     }
     return await this.landCollection.findOne({ _id: id });
   }

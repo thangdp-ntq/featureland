@@ -41,6 +41,28 @@ export class LandController {
   //   return this.landService.dumpData()
   // }
 
+  @Get(":id/top-land")
+  @ApiResponse({
+    status: HttpStatus.OK,
+    schema: {
+      properties: {
+        code: { type: "string", example: API_SUCCESS },
+        message: {
+          type: "string",
+          example: CommonCode.DEFAULT_SUCCESS_MESSAGE,
+        },
+        data: { type: "object", example: {} },
+      },
+    },
+  })
+  @ApiOperation({
+    summary: "Get Region by Id",
+  })
+  async topLand(@Param("id") id: string) {
+    const topOwner = await this.landService.topLand(id);
+    return new ApiSuccessResponse<unknown>().success(topOwner, "");
+  }
+
   @Get(":id/top-owner")
   @ApiResponse({
     status: HttpStatus.OK,
@@ -59,7 +81,7 @@ export class LandController {
     summary: "Get Region by Id",
   })
   async topOwner(@Param("id") id: string) {
-    const  topOwner = await this.landService.topOwner(id);
+    const topOwner = await this.landService.topOwner(id);
     return new ApiSuccessResponse<unknown>().success(topOwner, "");
   }
 
@@ -81,7 +103,7 @@ export class LandController {
     summary: "Get Region by Id",
   })
   findOne(@Param("id") id: string) {
-    console.log(83)
+    console.log(83);
     return this.landService.findOne(id);
   }
 
@@ -117,18 +139,34 @@ export class LandController {
     }
   }
 
-  // @Post(":id/remove-nft")
-  // @ApiResponse({ status: HttpStatus.OK, schema: {
-  //   properties: {
-  //     code: { type: 'string', example: API_SUCCESS },
-  //     message: {
-  //       type: 'string',
-  //       example: CommonCode.DEFAULT_SUCCESS_MESSAGE,
-  //     },
-  //     data: { type: 'object', example: {} },
-  //   },
-  // } })
-  // findOne2(@Param("id") id: string,@Body() tokens:RemoveNFTDto) {
-  //   return this.landService.findOne(id);
-  // }
+  @Post(":id/remove-nft")
+  @ApiResponse({
+    status: HttpStatus.OK,
+    schema: {
+      properties: {
+        code: { type: "string", example: API_SUCCESS },
+        message: {
+          type: "string",
+          example: CommonCode.DEFAULT_SUCCESS_MESSAGE,
+        },
+        data: { type: "object", example: {} },
+      },
+    },
+  })
+  async findOne2(
+    @Param("id") id: string,
+    @Body() tokenIds: RemoveNFTDto,
+    @Req() req
+  ) {
+    try {
+      const res = await this.landService.removeNft(
+        id,
+        tokenIds.tokenIds,
+        req.address
+      );
+      return res;
+    } catch (error) {
+      throw HttpError.error(HttpStatus.BAD_REQUEST, error, []);
+    }
+  }
 }

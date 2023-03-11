@@ -14,6 +14,10 @@ export class Region {
 
   @Prop({ type: String })
   description: string;
+
+  @Prop({ type: String })
+  activeLand: string;
+
 }
 
 export const RegionSchema = SchemaFactory.createForClass(Region);
