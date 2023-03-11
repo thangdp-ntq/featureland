@@ -118,6 +118,8 @@ export class LandService {
     return this.landCollection.aggregate([
       { $sort: { numberNfts: -1 } },
       { $sort: { updatedAt: -1 } },
+      { $skip: 0 },
+      { $limit: 10 },
     ]);
   }
 
