@@ -124,13 +124,13 @@ export class LandService {
   topOwner(id: string) {
     return this.landCollection.aggregate([
       {
+        $match: { ownerAddress: { $ne: "" } },
+      },
+      {
         $group: {
           _id: "$ownerAddress",
           count: { $sum: 1 },
         },
-      },
-      {
-        $match: { ownerAddress: { $ne: "" } },
       },
       { $sort: { count: -1 } },
     ]);
