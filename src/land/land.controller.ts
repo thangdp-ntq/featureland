@@ -124,13 +124,13 @@ export class LandController {
   })
   async addNft(
     @Param("id") id: string,
-    @Body() tokenIds: AddNFTDto,
+    @Body() bodyAddNFt: AddNFTDto,
     @Req() req
   ) {
     try {
       const res = await this.landService.addNft(
         id,
-        tokenIds.tokenIds,
+        bodyAddNFt.tokenIds,
         req.address
       );
       return res;
@@ -155,13 +155,13 @@ export class LandController {
   })
   async findOne2(
     @Param("id") id: string,
-    @Body() tokenIds: RemoveNFTDto,
+    @Body() bodyRemoveNFt: RemoveNFTDto,
     @Req() req
   ) {
     try {
       const res = await this.landService.removeNft(
         id,
-        tokenIds.tokenIds,
+        bodyRemoveNFt.tokenIds,
         req.address
       );
       return res;

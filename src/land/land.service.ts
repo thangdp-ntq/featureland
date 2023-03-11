@@ -155,6 +155,7 @@ export class LandService {
         regionId: land.regionId,
       }
     );
+    console.log(update)
     //find nfts
     const nfts = await this.nftModel.find({
       landId: id,
@@ -167,6 +168,7 @@ export class LandService {
           useAddNftAddress: address,
         }
       );
+      console.log('updateLand',updateLand)
     }
     if (nfts.length === NUMBER_NFT_TO_OWNER) {
       const updateLand = await this.landCollection.updateOne(
@@ -175,6 +177,7 @@ export class LandService {
           ownerAddress: address,
         }
       );
+      console.log('updateLand2',updateLand)
     }
     const nftOfLand = await this.nftModel.find({
       landId: id,
@@ -186,6 +189,7 @@ export class LandService {
         numberNfts: nftOfLand.length,
       }
     );
+    console.log('updateLand3',updateLand)
     return await this.landCollection.findOne({ _id: id });
   }
   async removeNft(id: string, tokens, address) {

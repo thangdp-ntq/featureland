@@ -39,6 +39,9 @@ export class NftService {
     if (getParams.tokenId) {
       match["tokenId"] = getParams.tokenId;
     }
+    if (getParams.canAddNft) {
+      match["landId"] = ''
+    }
     if (getParams.landId) {
       match["landId"] = getParams.landId;
     }
@@ -60,7 +63,7 @@ export class NftService {
         ...match,
       },
     });
-
+    console.log(piline)
     const $facet: any = {
       pageInfo: [{ $count: "totalItem" }],
       items: [

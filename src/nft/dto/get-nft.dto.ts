@@ -40,6 +40,16 @@ export class GetNFT {
   tokenId: string;
 
   @ApiProperty({
+    required: false,
+    description: 'the page, params not required default page=1,',
+  })
+  @IsOptional()
+  @IsInt()
+  @Type(() => Number)
+  canAddNft: number;
+
+
+  @ApiProperty({
     example: 1,
     required: false,
     description: 'the page, params not required default page=1,',
