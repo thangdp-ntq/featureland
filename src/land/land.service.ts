@@ -4,7 +4,11 @@ import { Land, LandDocument } from "~/schemas/land.schema";
 import { Model } from "mongoose";
 import { NFT, NFTDocument } from "~/schemas";
 import { PipelineStage } from "mongoose";
-import { NUMBER_NFT_TO_ADD_NFT, NUMBER_NFT_TO_OWNER, SORT_AGGREGATE } from "~/common/constants";
+import {
+  NUMBER_NFT_TO_ADD_NFT,
+  NUMBER_NFT_TO_OWNER,
+  SORT_AGGREGATE,
+} from "~/common/constants";
 import ObjectID from "bson-objectid";
 
 @Injectable()
@@ -14,7 +18,7 @@ export class LandService {
     @InjectModel(NFT.name) private nftModel: Model<NFTDocument>
   ) {}
 
-  async findAll({ pageSize = 10, page = 1, ...getParams }) {
+  async findAll({ pageSize = 10, page = 1, tab = 1, ...getParams }) {
     const match: Record<string, any> = {};
     if (getParams.regionId) {
       match["regionId"] = getParams.regionId;
@@ -22,7 +26,9 @@ export class LandService {
     if (getParams.ownerAddress) {
       match["ownerAddress"] = getParams.ownerAddress;
     }
-    const sort: Record<string, any> = {};
+    const sort: Record<string, any> = {
+      version: 1,
+    };
 
     if (getParams.sortField && getParams.sortType) {
       sort[getParams.sortField] =
@@ -30,15 +36,16 @@ export class LandService {
     } else {
       sort["createdAt"] = SORT_AGGREGATE.DESC;
     }
-    console.log(sort);
     const piline: PipelineStage[] = [];
-
+    if (tab > 1) {
+      match["version"] = { $gte: (tab - 1) * 500, $lt: tab * 500 };
+    }
     piline.push({
       $match: {
         ...match,
       },
     });
-
+    console.log(piline);
     const $facet: any = {
       pageInfo: [{ $count: "totalItem" }],
       items: [
@@ -111,7 +118,21 @@ export class LandService {
   }
 
   findOne(id: string) {
-    return this.landCollection.findOne({ id });
+    return this.landCollection.aggregate([
+      {
+        $match: { _id: ObjectID(id) },
+      },
+      { $addFields: { userId: { $toObjectId: "$regionId" } } },
+      {
+        $lookup: {
+          from: "Region",
+          localField: "userId",
+          foreignField: "_id",
+          as: "Region",
+        },
+      },
+      { $unwind: "$Region" },
+    ]);
   }
 
   topLand(id: string) {
@@ -157,20 +178,23 @@ export class LandService {
         regionId: land.regionId,
       }
     );
-    console.log(update)
+    console.log(update);
     //find nfts
     const nfts = await this.nftModel.find({
       landId: id,
       ownerAddress: address,
     });
-    if (nfts.length >= NUMBER_NFT_TO_ADD_NFT && nfts.length < NUMBER_NFT_TO_OWNER) {
+    if (
+      nfts.length >= NUMBER_NFT_TO_ADD_NFT &&
+      nfts.length < NUMBER_NFT_TO_OWNER
+    ) {
       const updateLand = await this.landCollection.updateOne(
         { _id: ObjectID(id) },
         {
           useAddNftAddress: address,
         }
       );
-      console.log('updateLand',updateLand)
+      console.log("updateLand", updateLand);
     }
     if (nfts.length === NUMBER_NFT_TO_OWNER) {
       const updateLand = await this.landCollection.updateOne(
@@ -179,7 +203,7 @@ export class LandService {
           ownerAddress: address,
         }
       );
-      console.log('updateLand2',updateLand)
+      console.log("updateLand2", updateLand);
     }
     const nftOfLand = await this.nftModel.find({
       landId: id,
@@ -191,7 +215,7 @@ export class LandService {
         numberNfts: nftOfLand.length,
       }
     );
-    console.log('updateLand3',updateLand)
+    console.log("updateLand3", updateLand);
     return await this.landCollection.findOne({ _id: id });
   }
   async removeNft(id: string, tokens, address) {
@@ -205,8 +229,8 @@ export class LandService {
     const update = await this.nftModel.updateMany(
       { tokenId: { $in: tokens }, landId: id, ownerAddress: address },
       {
-        landId: '',
-        regionId:'',
+        landId: "",
+        regionId: "",
       }
     );
     const nftOfLand = await this.nftModel.find({

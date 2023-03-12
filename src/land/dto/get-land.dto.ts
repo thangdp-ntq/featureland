@@ -4,6 +4,7 @@ import {
   IsEnum,
   IsIn,
   IsInt,
+  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
@@ -20,6 +21,14 @@ export class GetLand {
     @IsString()
     @MaxLength(255)
     ownerAddress: string;
+
+    @ApiProperty({
+      required: false,
+      description:
+        'if you send this params up, will return about nfts same ownerAddress,params not required',
+    })
+    @IsOptional()
+    tab: number;
 
     @ApiProperty({
       required: false,

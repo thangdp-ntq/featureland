@@ -102,9 +102,9 @@ export class LandController {
   @ApiOperation({
     summary: "Get Region by Id",
   })
-  findOne(@Param("id") id: string) {
-    console.log(83);
-    return this.landService.findOne(id);
+  async findOne(@Param("id") id: string) {
+    const land = await this.landService.findOne(id);
+    return new ApiSuccessResponse<unknown>().success(land[0], "");
   }
 
   @UseGuards(Web3Guard)
