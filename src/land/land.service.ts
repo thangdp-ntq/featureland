@@ -140,14 +140,14 @@ export class LandService {
       { $sort: { numberNfts: -1 } },
       { $sort: { updatedAt: -1 } },
       { $skip: 0 },
-      { $limit: 10 },
+      { $limit: 3 },
     ]);
   }
 
   topOwner(id: string) {
-    return this.landCollection.aggregate([
+    return this.nftModel.aggregate([
       {
-        $match: { ownerAddress: { $ne: "" } },
+        $match: { landId: id },
       },
       {
         $group: {
@@ -156,6 +156,7 @@ export class LandService {
         },
       },
       { $sort: { count: -1 } },
+      { $limit: 3 },
     ]);
   }
 
