@@ -135,14 +135,15 @@ export class LandService {
     ]);
   }
 
-  topLand(id: string) {
-    return this.landCollection.aggregate([
-      { $sort: { numberNfts: -1 } },
-      { $sort: { updatedAt: -1 } },
-      { $skip: 0 },
-      { $limit: 3 },
-    ]);
-  }
+  // topLand(id: string) {
+  //   return this.landCollection.aggregate([
+  //     {$match:{regionId:id}},
+  //     { $sort: { numberNfts: -1 } },
+  //     { $sort: { updatedAt: -1 } },
+  //     { $skip: 0 },
+  //     { $limit: 3 },
+  //   ]);
+  // }
 
   topOwner(id: string) {
     return this.nftModel.aggregate([

@@ -41,27 +41,27 @@ export class LandController {
   //   return this.landService.dumpData()
   // }
 
-  @Get(":id/top-land")
-  @ApiResponse({
-    status: HttpStatus.OK,
-    schema: {
-      properties: {
-        code: { type: "string", example: API_SUCCESS },
-        message: {
-          type: "string",
-          example: CommonCode.DEFAULT_SUCCESS_MESSAGE,
-        },
-        data: { type: "object", example: {} },
-      },
-    },
-  })
-  @ApiOperation({
-    summary: "Get Region by Id",
-  })
-  async topLand(@Param("id") id: string) {
-    const topOwner = await this.landService.topLand(id);
-    return new ApiSuccessResponse<unknown>().success(topOwner, "");
-  }
+  // @Get(":id/top-land")
+  // @ApiResponse({
+  //   status: HttpStatus.OK,
+  //   schema: {
+  //     properties: {
+  //       code: { type: "string", example: API_SUCCESS },
+  //       message: {
+  //         type: "string",
+  //         example: CommonCode.DEFAULT_SUCCESS_MESSAGE,
+  //       },
+  //       data: { type: "object", example: {} },
+  //     },
+  //   },
+  // })
+  // @ApiOperation({
+  //   summary: "Get Region by Id",
+  // })
+  // async topLand(@Param("id") id: string) {
+  //   const topOwner = await this.landService.topLand(id);
+  //   return new ApiSuccessResponse<unknown>().success(topOwner, "");
+  // }
 
   @Get(":id/top-owner")
   @ApiResponse({
