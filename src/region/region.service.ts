@@ -53,6 +53,6 @@ export class RegionService {
     });
     const nfts = await this.nftModel.find({ regionId: id });
     const totalOwner = new Set(lands.map((e) => e.ownerAddress)).size;
-    return { ...region["_doc"], totalOwner: totalOwner, totalNft: nfts.length };
+    return { ...region["_doc"], activeLand:lands.length, totalOwner: totalOwner, totalNft: nfts.length };
   }
 }
