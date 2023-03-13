@@ -458,5 +458,5 @@ export const KEY_IMPORT_CSV = [
   "Wallet address",
 ];
 
-export const NUMBER_NFT_TO_OWNER = 500;
-export const NUMBER_NFT_TO_ADD_NFT = 200;
+export const NUMBER_NFT_TO_OWNER = 5;
+export const NUMBER_NFT_TO_ADD_NFT = 2;

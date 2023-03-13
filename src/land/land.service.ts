@@ -37,8 +37,8 @@ export class LandService {
       sort["createdAt"] = SORT_AGGREGATE.DESC;
     }
     const piline: PipelineStage[] = [];
-    if (tab > 1) {
-      match["version"] = { $gte: (tab - 1) * 500, $lt: tab * 500 };
+    if (tab) {
+      match["version"] = { $gt: (tab - 1) * 500, $lte: tab * 500 };
     }
     piline.push({
       $match: {
