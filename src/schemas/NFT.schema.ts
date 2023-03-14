@@ -34,7 +34,7 @@ export class NFT {
     type: "string",
     example: 1,
   })
-  @Prop({ unique: true })
+  @Prop({ unique: true, index:1 })
   tokenId: number;
 
   @ApiProperty({
@@ -48,7 +48,7 @@ export class NFT {
     type: "string",
     example: "0xe4Fd432b16c9b1c1E86d0A359fdC270c5E89258d",
   })
-  @Prop({ default: "" })
+  @Prop({ default: "", index:1 })
   landId: string;
 
   @ApiProperty({
@@ -62,7 +62,7 @@ export class NFT {
     type: "string",
     example: "0xe4Fd432b16c9b1c1E86d0A359fdC270c5E89258d",
   })
-  @Prop({ default: "" })
+  @Prop({ default: "", index:1 })
   regionId: string;
 }
 export const NFTSchema = SchemaFactory.createForClass(NFT);

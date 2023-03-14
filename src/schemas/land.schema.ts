@@ -6,7 +6,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
   versionKey: false,
 })
 export class Land {
-  @Prop({ type: String })
+  @Prop({ type: String, index: 1 })
   regionId: string;
 
   @Prop({ type: String })
@@ -15,10 +15,10 @@ export class Land {
   @Prop({ type: Number })
   numberNfts: number;
 
-  @Prop({ type: Number })
+  @Prop({ type: Number, index: 1 })
   version: number;
 
-  @Prop({ type: String })
+  @Prop({ type: String, index: 1 })
   ownerAddress: string;
 
   @Prop({ type: String })
