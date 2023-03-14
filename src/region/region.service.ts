@@ -67,7 +67,7 @@ export class RegionService {
       { $sort: { numberNfts: -1 } },
       { $sort: { updatedAt: -1 } },
       { $skip: 0 },
-      { $limit: 3 },
+      { $limit: 5 },
     ]);
   }
 }
