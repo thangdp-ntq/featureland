@@ -34,7 +34,10 @@ export class NftService {
     @InjectConnection() private readonly connection: Connection
   ) {}
 
-  async getNfts({ pageSize = 10, page = 1, ...getParams }): Promise<any> {
+  async getNfts({ pageSize = 10, page = 1,tab = 1, ...getParams }): Promise<any> {
+    if(tab==2){
+      page+=5
+    }
     const match: Record<string, any> = {};
     if (getParams.tokenId) {
       match["tokenId"] = getParams.tokenId;
@@ -63,7 +66,6 @@ export class NftService {
         ...match,
       },
     });
-    console.log(piline)
     const $facet: any = {
       pageInfo: [{ $count: "totalItem" }],
       items: [
@@ -99,8 +101,8 @@ export class NftService {
       const totalItem = pageInfo?.totalItem;
       const totalPages = Math.ceil(totalItem / pageSize);
       const length = result.items?.length
-      if(getParams.landId&&length<500){
-        result.items.push(Array(500-length).join(".").split("."))
+      if(getParams.landId&&length<50){
+        result.items.push(Array(50-length).join(".").split("."))
       }
       return {
         items: result.items.flat(),
