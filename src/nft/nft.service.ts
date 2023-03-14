@@ -102,7 +102,7 @@ export class NftService {
       const totalPages = Math.ceil(totalItem / pageSize);
       const length = result.items?.length
       if(getParams.landId&&length<50){
-        result.items.push(Array(50-length).join(".").split("."))
+        result.items.push(Array(49-length).join(".").split("."))
         totalItem=250
       }
       return {
