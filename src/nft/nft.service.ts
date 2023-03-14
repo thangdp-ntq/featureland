@@ -136,7 +136,7 @@ export class NftService {
     } else {
       await this.nftModel.create({
         ownerAddress: data.metadata.to,
-        image: `http://139.177.189.219:5001/images/land${
+        image: `http://139.177.189.219:5001/images/nft${
           (data.metadata.tokenId % 10) + 1
         }.png`,
         tokenId: Number(data.metadata.tokenId),
