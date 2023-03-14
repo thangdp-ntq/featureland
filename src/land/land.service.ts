@@ -190,34 +190,32 @@ export class LandService {
       nfts.length >= NUMBER_NFT_TO_ADD_NFT &&
       nfts.length < NUMBER_NFT_TO_OWNER
     ) {
-      const updateLand = await this.landCollection.updateOne(
+      const updateLand = await this.landCollection.findOneAndUpdate(
         { _id: ObjectID(id) },
         {
           useAddNftAddress: address,
+          numberNfts: {$inc:update.modifiedCount},
         }
       );
       console.log("updateLand", updateLand);
     }
-    if (nfts.length === NUMBER_NFT_TO_OWNER) {
+    if (nfts.length >= NUMBER_NFT_TO_OWNER) {
       const updateLand = await this.landCollection.updateOne(
         { _id: ObjectID(id) },
         {
           ownerAddress: address,
+          numberNfts: 500,
         }
       );
       console.log("updateLand2", updateLand);
     }
-    const nftOfLand = await this.nftModel.find({
-      landId: id,
-    });
 
-    const updateLand = await this.landCollection.updateOne(
-      { _id: ObjectID(id) },
-      {
-        numberNfts: nftOfLand.length,
-      }
-    );
-    console.log("updateLand3", updateLand);
+    // const updateLand = await this.landCollection.updateOne(
+    //   { _id: ObjectID(id) },
+    //   {
+    //     numberNfts: nftOfLand.length,
+    //   }
+    // );
     return await this.landCollection.findOne({ _id: id });
   }
   async removeNft(id: string, tokens, address) {
