@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
+import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { Land, LandDocument } from "~/schemas/land.schema";
 import { Model } from "mongoose";
 import { NFT, NFTDocument } from "~/schemas";
@@ -10,12 +10,14 @@ import {
   SORT_AGGREGATE,
 } from "~/common/constants";
 import ObjectID from "bson-objectid";
+import mongoose from "mongoose";
 
 @Injectable()
 export class LandService {
   constructor(
     @InjectModel(Land.name) private landCollection: Model<LandDocument>,
-    @InjectModel(NFT.name) private nftModel: Model<NFTDocument>
+    @InjectModel(NFT.name) private nftModel: Model<NFTDocument>,
+    @InjectConnection() private readonly connection: mongoose.Connection,
   ) {}
 
   async findAll({ pageSize = 10, page = 1, tab = 1, ...getParams }) {
@@ -173,6 +175,10 @@ export class LandService {
       throw "you wallet cannot add nft0";
     }
     // update nft
+    const session = await this.connection.startSession();
+ 
+    session.startTransaction();
+    try {
     const update = await this.nftModel.updateMany(
       { tokenId: { $in: tokens }, landId: "", ownerAddress: address },
       {
@@ -217,7 +223,13 @@ export class LandService {
         numberNfts: nftOfLand.length,
       }
     );
-    console.log("updateLand3", updateLand);
+    await session.commitTransaction();
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    session.endSession();
+  }
     return await this.landCollection.findOne({ _id: id });
   }
   async removeNft(id: string, tokens, address) {
