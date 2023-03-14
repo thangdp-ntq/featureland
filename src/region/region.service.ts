@@ -64,8 +64,8 @@ export class RegionService {
   topLand(id: string) {
     return this.landCollection.aggregate([
       { $match: { regionId: id } },
-      { $sort: { numberNfts: -1 } },
       { $sort: { updatedAt: -1 } },
+      { $sort: { numberNfts: -1 } },
       { $skip: 0 },
       { $limit: 5 },
     ]);
