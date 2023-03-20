@@ -131,7 +131,8 @@ export class LandController {
       const res = await this.landService.addNft(
         id,
         bodyAddNFt.tokenIds,
-        req.address
+        req.address,
+        bodyAddNFt.index
       );
       return res;
     } catch (error) {

@@ -9,6 +9,13 @@ export class AddNFTDto {
     example: [1, 2, 3],
   })
   tokenIds: number[];
+
+  @IsOptional()
+  @ApiProperty({
+    type: String,
+    example: 1,
+  })
+  index: number;
 }
 
 export class RemoveNFTDto {

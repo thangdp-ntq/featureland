@@ -163,64 +163,69 @@ export class LandService {
     ]);
   }
 
-  async addNft(id: string, tokens, address) {
+  async addNft(id: string, tokens, address, index) {
     const land = await this.landCollection.findOne({ _id: id });
     if (!land) {
       throw "Land not found";
     }
-    if (land.ownerAddress) {
+    if (land.ownerAddress) {//đủ 500 nft
       throw "Land has owner";
     }
-    if (land.useAddNftAddress && land.useAddNftAddress !== address) {
-      throw "you wallet cannot add nft0";
+    if (land.useAddNftAddress && land.useAddNftAddress !== address&&land.numberNfts>=200) {// 200 nft và ko phải address
+      throw "you wallet cannot add nft";
+    }
+    if(index){
+      const nft = await this.nftModel.findOne({
+        tokenId:{ $in: tokens },
+        landId: id,
+        index
+      })
+      if(nft){
+        throw "you wallet cannot add nft. index exsit";
+      }
     }
     // update nft
     const session = await this.connection.startSession();
  
     session.startTransaction();
     try {
-    const update = await this.nftModel.updateMany(
+      if(tokens.length<1){
+        return 
+      }
+    await this.nftModel.updateMany(
       { tokenId: { $in: tokens }, landId: "", ownerAddress: address },
       {
         landId: id,
         regionId: land.regionId,
+        index:index?index:''
       }
     );
-    console.log(update);
-    //find nfts
-    const nfts = await this.nftModel.find({
-      landId: id,
-      ownerAddress: address,
-    });
-    if (
-      nfts.length >= NUMBER_NFT_TO_ADD_NFT &&
-      nfts.length < NUMBER_NFT_TO_OWNER
-    ) {
-      const updateLand = await this.landCollection.updateOne(
+    if(!land.useAddNftAddress){
+      await this.landCollection.updateOne(
         { _id: ObjectID(id) },
         {
           useAddNftAddress: address,
         }
       );
-      console.log("updateLand", updateLand);
     }
-    if (nfts.length === NUMBER_NFT_TO_OWNER) {
-      const updateLand = await this.landCollection.updateOne(
+    //find nfts
+    const nfts = await this.nftModel.find({
+      landId: id,
+    });
+    if(nfts.length===NUMBER_NFT_TO_OWNER){
+      await this.landCollection.updateOne(
         { _id: ObjectID(id) },
         {
           ownerAddress: address,
-        }
-      );
-      console.log("updateLand2", updateLand);
+        })
     }
-    const nftOfLand = await this.nftModel.find({
-      landId: id,
-    });
+   
+          
 
     const updateLand = await this.landCollection.updateOne(
       { _id: ObjectID(id) },
       {
-        numberNfts: nftOfLand.length,
+        numberNfts: nfts.length,
       }
     );
     await session.commitTransaction();
