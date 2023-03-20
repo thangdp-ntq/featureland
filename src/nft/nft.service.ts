@@ -39,7 +39,7 @@ export class NftService {
       const listnft = await this.nftModel.find({landId:getParams.landId})
       let res =[]
        for (let index = 0; index < 500; index++) {
-            if(listnft[index]&&res[index]){
+            if(listnft[index]){
               if(listnft[index].index){
                 res[index]=''
                 res[listnft[index].index]=listnft[index]
@@ -47,7 +47,9 @@ export class NftService {
                 res.push(listnft[index])
               }
             } else{
-              res.push('')
+              if(!res[index]){
+                res[index]=''
+              }
             }
        } 
        return res
