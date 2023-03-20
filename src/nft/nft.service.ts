@@ -43,9 +43,8 @@ export class NftService {
        for (let index = 0; index < isExistIndex.length; index++) {
             res[isExistIndex[index].index]=isExistIndex[index]
        } 
-        for (let index = 0; index < isExistIndex.length; index++) {
+        for (let index = 0; index < notExist.length; index++) {
          const indexRes = res.findIndex(e=>e==='')
-         console.log(indexRes)
          if(indexRes!==-1){
            res[indexRes]=notExist[index]
          }
