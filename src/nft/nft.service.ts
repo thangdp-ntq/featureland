@@ -50,6 +50,7 @@ export class NftService {
               res.push('')
             }
        } 
+       return res
     }
     const match: Record<string, any> = {};
     if (getParams.tokenId) {
