@@ -30,6 +30,10 @@ export class NFT {
   @Prop({ default: "" })
   image: string;
 
+  @ApiProperty({ example: "test NFT" })
+  @Prop({ default: "" })
+  index: string;
+
   @ApiProperty({
     type: "string",
     example: 1,
