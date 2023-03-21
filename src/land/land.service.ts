@@ -17,7 +17,7 @@ export class LandService {
   constructor(
     @InjectModel(Land.name) private landCollection: Model<LandDocument>,
     @InjectModel(NFT.name) private nftModel: Model<NFTDocument>,
-    @InjectConnection() private readonly connection: mongoose.Connection,
+    @InjectConnection() private readonly connection: mongoose.Connection
   ) {}
 
   async findAll({ pageSize = 10, page = 1, tab = 1, ...getParams }) {
@@ -168,69 +168,66 @@ export class LandService {
     if (!land) {
       throw "Land not found";
     }
-    if (land.ownerAddress) {//đủ 500 nft
+    if (land.ownerAddress) {
+      //đủ 500 nft
       throw "Land has owner";
     }
-    if (land.useAddNftAddress && land.useAddNftAddress !== address&&land.numberNfts>=200) {// 200 nft và ko phải address
+    if (
+      land.useAddNftAddress &&
+      land.useAddNftAddress !== address &&
+      land.numberNfts >= 200
+    ) {
+      // 200 nft và ko phải address
       throw "you wallet cannot add nft";
     }
-    // if(index){
-    //   const nft = await this.nftModel.findOne({
-    //     tokenId:{ $in: tokens },
-    //     landId: id,
-    //     index
-    //   })
-    //   if(nft){
-    //     throw "you wallet cannot add nft. index exsit";
-    //   }
-    // }
     // update nft
     const session = await this.connection.startSession();
- 
+
     session.startTransaction();
     try {
-      if(tokens.length<1){
-        return 
+      if (tokens.length < 1) {
+        return;
       }
-    await this.nftModel.updateMany(
-      { tokenId: { $in: tokens }, landId: "", ownerAddress: address },
-      {
-        landId: id,
-        regionId: land.regionId
-      }
-    );
-    if(!land.useAddNftAddress){
-      await this.landCollection.updateOne(
-        { _id: ObjectID(id) },
+      await this.nftModel.updateMany(
+        { tokenId: { $in: tokens }, landId: "", ownerAddress: address },
         {
-          useAddNftAddress: address,
+          landId: id,
+          regionId: land.regionId,
         }
       );
-    }
-    //find nfts
-    const nfts = await this.nftModel.find({
-      landId: id,
-    });
-    if(nfts.length===NUMBER_NFT_TO_OWNER){
+      if (!land.useAddNftAddress) {
+        await this.landCollection.updateOne(
+          { _id: ObjectID(id) },
+          {
+            useAddNftAddress: address,
+          }
+        );
+      }
+      //find nfts
+      const nfts = await this.nftModel.find({
+        landId: id,
+      });
+      if (nfts.length >= NUMBER_NFT_TO_OWNER) {
+        await this.landCollection.updateOne(
+          { _id: ObjectID(id) },
+          {
+            ownerAddress: land.useAddNftAddress,
+          }
+        );
+      }
       await this.landCollection.updateOne(
         { _id: ObjectID(id) },
         {
-          ownerAddress: address,
-        })
+          numberNfts: nfts.length,
+        }
+      );
+      await session.commitTransaction();
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
     }
-    await this.landCollection.updateOne(
-      { _id: ObjectID(id) },
-      {
-        numberNfts: nfts.length,
-      }
-    );
-    await session.commitTransaction();
-  } catch (error) {
-    await session.abortTransaction();
-    throw error;
-  } finally {
-    session.endSession();
-  }
     return await this.landCollection.findOne({ _id: id });
   }
   async removeNft(id: string, tokens, address) {
