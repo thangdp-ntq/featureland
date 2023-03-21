@@ -175,7 +175,7 @@ export class LandService {
     if (
       land.useAddNftAddress &&
       land.useAddNftAddress !== address &&
-      land.numberNfts >= 200
+      land.numberNfts >= NUMBER_NFT_TO_ADD_NFT
     ) {
       // 200 nft và ko phải address
       throw "you wallet cannot add nft";
