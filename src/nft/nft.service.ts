@@ -38,17 +38,9 @@ export class NftService {
     if(getParams.landId){
       const listnft = await this.nftModel.find({landId:getParams.landId})
       let res : any = new Array(500).fill('')
-      const isExistIndex= listnft.filter(e=>e.index)
-      const notExist= listnft.filter(e=>!e.index)
-       for (let index = 0; index < isExistIndex.length; index++) {
-            res[isExistIndex[index].index]=isExistIndex[index]
+       for (let index = 0; index < listnft.length; index++) {
+            res[index]=listnft[index]
        } 
-        for (let index = 0; index < notExist.length; index++) {
-         const indexRes = res.findIndex(e=>e==='')
-         if(indexRes!==-1){
-           res[indexRes]=notExist[index]
-         }
-        }
        return res
     }
     const match: Record<string, any> = {};

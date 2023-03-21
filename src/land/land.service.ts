@@ -174,16 +174,16 @@ export class LandService {
     if (land.useAddNftAddress && land.useAddNftAddress !== address&&land.numberNfts>=200) {// 200 nft và ko phải address
       throw "you wallet cannot add nft";
     }
-    if(index){
-      const nft = await this.nftModel.findOne({
-        tokenId:{ $in: tokens },
-        landId: id,
-        index
-      })
-      if(nft){
-        throw "you wallet cannot add nft. index exsit";
-      }
-    }
+    // if(index){
+    //   const nft = await this.nftModel.findOne({
+    //     tokenId:{ $in: tokens },
+    //     landId: id,
+    //     index
+    //   })
+    //   if(nft){
+    //     throw "you wallet cannot add nft. index exsit";
+    //   }
+    // }
     // update nft
     const session = await this.connection.startSession();
  
@@ -196,8 +196,7 @@ export class LandService {
       { tokenId: { $in: tokens }, landId: "", ownerAddress: address },
       {
         landId: id,
-        regionId: land.regionId,
-        index:index?index:''
+        regionId: land.regionId
       }
     );
     if(!land.useAddNftAddress){
@@ -219,10 +218,7 @@ export class LandService {
           ownerAddress: address,
         })
     }
-   
-          
-
-    const updateLand = await this.landCollection.updateOne(
+    await this.landCollection.updateOne(
       { _id: ObjectID(id) },
       {
         numberNfts: nfts.length,
