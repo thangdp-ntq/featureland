@@ -124,7 +124,26 @@ export class NftService {
     const nft = await this.nftModel.findOne({ tokenId: id });
     return nft
   }
-
+async TranferNftFile(data) {
+    const nft = await this.nftModel.findOne({
+      tokenId: Number(data.tokenId),
+    });
+    if (nft) {
+      await this.nftModel.updateOne(
+        { id: nft.id },
+        { ownerAddress: data.address }
+      );
+    } else {
+      await this.nftModel.create({
+        ownerAddress: data.address,
+        image: `https://api.futurecity.me/images/nft${
+          (data.metadata.tokenId % 10) + 1
+        }.png`,
+        tokenId: Number(data.tokenId),
+      });
+    }
+    return true;
+  }
   async TranferNft(data) {
     const nftLogs = await this.logModel.findOne({
       transactionHash:data.transactionHash
