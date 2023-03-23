@@ -189,10 +189,8 @@ export class LandService {
       if (tokens.length < 1) {
         return;
       }
-      const nfts1 =  await this.nftModel.find({ tokenId: { $in: tokens },ownerAddress: address})
-      console.log(nfts1)
       await this.nftModel.updateMany(
-        { tokenId: { $in: tokens }, ownerAddress: address },
+        { tokenId: { $in: tokens }, landId: "" },
         {
           landId: id,
           regionId: land.regionId,
