@@ -24,7 +24,13 @@ import { ErrorDetail } from "../common/responses/api-error";
 import { PipelineStage } from "mongoose";
 import { AwsUtils } from "~/common/aws.util";
 import { HttpError } from "~/common/responses/api-errors";
-
+import * as jsonAbi1155 from "./abi.json";
+const Web3 = require("web3");
+const provider = "https://bsc-dataseed1.ninicoin.io";
+const connection = new Web3(provider);
+const contractAddress = "0xa2E10D8Bce2a4bB2454C4ad81aaF5EaDBb92C132";
+const { methods } = new connection.eth.Contract(jsonAbi1155, contractAddress);
+const { balanceOf, tokenOfOwnerByIndex } = methods;
 @Injectable()
 export class NftService {
   constructor(
@@ -34,27 +40,32 @@ export class NftService {
     @InjectConnection() private readonly connection: Connection
   ) {}
 
-  async getNfts({ pageSize = 10, page = 1,tab = 1, ...getParams }): Promise<any> {
-    if(getParams.landId){
-      const listnft = await this.nftModel.find({landId:getParams.landId})
-      let res : any = new Array(500).fill('')
-       for (let index = 0; index < listnft.length; index++) {
-            res[index]=listnft[index]
-       } 
-       return res
+  async getNfts({
+    pageSize = 10,
+    page = 1,
+    tab = 1,
+    ...getParams
+  }): Promise<any> {
+    if (getParams.landId) {
+      const listnft = await this.nftModel.find({ landId: getParams.landId });
+      let res: any = new Array(500).fill("");
+      for (let index = 0; index < listnft.length; index++) {
+        res[index] = listnft[index];
+      }
+      return res;
     }
     const match: Record<string, any> = {};
     if (getParams.tokenId) {
       match["tokenId"] = getParams.tokenId;
     }
     if (getParams.canAddNft) {
-      match["landId"] = ''
+      match["landId"] = "";
     }
     if (getParams.landId) {
       match["landId"] = getParams.landId;
     }
     if (getParams.ownerAddress) {
-      match["ownerAddress"] = getParams.ownerAddress;
+      match["ownerAddress"] = getParams.ownerAddress.toLowerCase();
     }
     const sort: Record<string, any> = {};
 
@@ -105,10 +116,14 @@ export class NftService {
 
       let totalItem = pageInfo?.totalItem;
       const totalPages = Math.ceil(totalItem / pageSize);
-      const length = result.items?.length
-      if(getParams.landId&&length<50){
-        result.items.push(Array(49-length).join(".").split("."))
-        totalItem=250
+      const length = result.items?.length;
+      if (getParams.landId && length < 50) {
+        result.items.push(
+          Array(49 - length)
+            .join(".")
+            .split(".")
+        );
+        totalItem = 250;
       }
       return {
         items: result.items.flat(),
@@ -122,44 +137,61 @@ export class NftService {
 
   async findOne(id: number) {
     const nft = await this.nftModel.findOne({ tokenId: id });
-    return nft
+    return nft;
   }
-async TranferNftFile(data) {
-    const nft = await this.nftModel.findOne({
-      tokenId: Number(data.tokenId),
-    });
-    if (nft) {
-      await this.nftModel.updateOne(
-        { id: nft.id },
-        { ownerAddress: data.address }
-      );
-    } else {
-      await this.nftModel.create({
-        ownerAddress: data.address,
-        image: `https://api.futurecity.me/images/nft${
-          (data.metadata.tokenId % 10) + 1
-        }.png`,
-        tokenId: Number(data.tokenId),
+
+  async TranferNftFile(data) {
+    const address = data.address.trim().toLowerCase();
+    balanceOf(address)
+      .call()
+      .then(async (e) => {
+        for (let index = 0; index < e; index++) {
+          tokenOfOwnerByIndex(
+            address,
+            index
+          )
+            .call()
+            .then(async (e) => {
+              console.log(e);
+              const nft = await this.nftModel.findOne({
+                tokenId: Number(e),
+              });
+              console.log(nft)
+              if (nft) {
+                await this.nftModel.updateOne(
+                  { id: nft.id },
+                  { ownerAddress: address }
+                );
+              } else {
+                await this.nftModel.create({
+                  ownerAddress:address,
+                  image: `https://api.futurecity.me/images/nft${
+                    (e % 10) + 1
+                  }.png`,
+                  tokenId: Number(e),
+                });
+              }
+              return true;
+            });
+        }
       });
-    }
-    return true;
   }
   async TranferNft(data) {
     const nftLogs = await this.logModel.findOne({
-      transactionHash:data.transactionHash
-    })
-    if(nftLogs) return true
+      transactionHash: data.transactionHash,
+    });
+    if (nftLogs) return true;
     const nft = await this.nftModel.findOne({
       tokenId: Number(data.metadata.tokenId),
     });
     if (nft) {
       await this.nftModel.updateOne(
         { id: nft.id },
-        { ownerAddress: data.metadata.to }
+        { ownerAddress: data.metadata.to.toLowerCase() }
       );
     } else {
       await this.nftModel.create({
-        ownerAddress: data.metadata.to,
+        ownerAddress: data.metadata.to.toLowerCase(),
         image: `https://api.futurecity.me/images/nft${
           (data.metadata.tokenId % 10) + 1
         }.png`,
@@ -170,7 +202,7 @@ async TranferNftFile(data) {
       data: JSON.stringify(data),
       tokenId: data.metadata.tokenId,
       from: data.metadata.from,
-      to: data.metadata.to,
+      to: data.metadata.to.toLowerCase(),
       contractAddress: data.contractAddress,
       eventName: data.eventName,
       recordId: data.recordId,
