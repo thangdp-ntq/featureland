@@ -164,6 +164,7 @@ export class LandService {
   }
 
   async addNft(id: string, tokens, address, index) {
+    console.log(address)
     const land = await this.landCollection.findOne({ _id: id });
     if (!land) {
       throw "Land not found";
@@ -189,7 +190,7 @@ export class LandService {
         return;
       }
       await this.nftModel.updateMany(
-        { tokenId: { $in: tokens }, landId: "", ownerAddress: address },
+        { tokenId: { $in: tokens }, ownerAddress: address },
         {
           landId: id,
           regionId: land.regionId,
