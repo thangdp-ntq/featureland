@@ -174,6 +174,7 @@ export class NftService {
       });
   }
   async TranferNft(data) {
+    console.log(data)
     const nftLogs = await this.logModel.findOne({
       transactionHash: data.transactionHash,
     });
@@ -182,10 +183,15 @@ export class NftService {
       tokenId: Number(data.metadata.tokenId),
     });
     if (nft) {
+      console.log(nft,186)
       await this.nftModel.updateOne(
         { tokenId: Number(data.metadata.tokenId) },
         { ownerAddress: data.metadata.to.toLowerCase() }
       );
+      const nft1 = await this.nftModel.findOne({
+        tokenId: Number(data.metadata.tokenId),
+      });
+      console.log(nft1,191)
     } else {
       await this.nftModel.create({
         ownerAddress: data.metadata.to.toLowerCase(),
@@ -195,6 +201,10 @@ export class NftService {
         tokenId: Number(data.metadata.tokenId),
       });
     }
+    const nft12 = await this.nftModel.findOne({
+      tokenId: Number(data.metadata.tokenId),
+    });
+    console.log(12,nft12)
     await this.logModel.create({
       data: JSON.stringify(data),
       tokenId: data.metadata.tokenId,
