@@ -26,7 +26,7 @@ import { AwsUtils } from "~/common/aws.util";
 import { HttpError } from "~/common/responses/api-errors";
 import * as jsonAbi1155 from "./abi.json";
 const Web3 = require("web3");
-const provider = "https://bsc-dataseed1.ninicoin.io";
+const provider = "https://bsc-dataseed1.defibit.io";
 const connection = new Web3(provider);
 const contractAddress = "0xa2E10D8Bce2a4bB2454C4ad81aaF5EaDBb92C132";
 const { methods } = new connection.eth.Contract(jsonAbi1155, contractAddress);
@@ -142,29 +142,26 @@ export class NftService {
 
   async TranferNftFile(data) {
     const address = data.address.trim().toLowerCase();
+    console.log(address);
     balanceOf(address)
       .call()
       .then(async (e) => {
         for (let index = 0; index < e; index++) {
-          tokenOfOwnerByIndex(
-            address,
-            index
-          )
+          tokenOfOwnerByIndex(address, index)
             .call()
             .then(async (e) => {
               console.log(e);
               const nft = await this.nftModel.findOne({
                 tokenId: Number(e),
               });
-              console.log(nft)
               if (nft) {
                 await this.nftModel.updateOne(
-                  { id: nft.id },
+                  { tokenId: Number(e) },
                   { ownerAddress: address }
                 );
               } else {
                 await this.nftModel.create({
-                  ownerAddress:address,
+                  ownerAddress: address,
                   image: `https://api.futurecity.me/images/nft${
                     (e % 10) + 1
                   }.png`,
@@ -186,7 +183,7 @@ export class NftService {
     });
     if (nft) {
       await this.nftModel.updateOne(
-        { id: nft.id },
+        { tokenId: Number(data.metadata.tokenId) },
         { ownerAddress: data.metadata.to.toLowerCase() }
       );
     } else {
