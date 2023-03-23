@@ -49,10 +49,10 @@ export class RegionService {
     const region = await this.regionCollection.findById(ObjectID(id));
     const lands = await this.landCollection.find({
       regionId: id,
-      ownerAddress: { $ne: "" },
+      useAddNftAddress: { $ne: "" },
     });
     const nfts = await this.nftModel.find({ regionId: id });
-    const totalOwner = new Set(lands.map((e) => e.ownerAddress)).size;
+    const totalOwner = new Set(lands.map((e) => e.useAddNftAddress)).size;
     return {
       ...region["_doc"],
       activeLand: lands.length,
