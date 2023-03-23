@@ -194,6 +194,7 @@ export class LandService {
         {
           landId: id,
           regionId: land.regionId,
+          addLand:address
         }
       );
       if (!land.useAddNftAddress) {
