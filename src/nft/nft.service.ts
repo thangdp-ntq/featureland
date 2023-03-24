@@ -217,4 +217,23 @@ export class NftService {
     });
     return true;
   }
+
+  async updateLock(data){
+    const {owner, tokenIds}= data.metadata
+    await this.nftModel.updateMany(
+      { tokenId: { $in: tokenIds } },
+      {
+        depositAddress:owner
+      }
+    );
+    await this.logModel.create({
+      data: JSON.stringify(data),
+      tokenId: data.metadata.tokenId,
+      to: owner.toLowerCase(),
+      contractAddress: data.contractAddress,
+      eventName: data.eventName,
+      recordId: data.recordId,
+      transactionHash: data.transactionHash,
+    });
+  }
 }

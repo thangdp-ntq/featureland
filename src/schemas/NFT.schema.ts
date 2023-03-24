@@ -34,6 +34,11 @@ export class NFT {
   @Prop({ default: "" })
   index: string;
 
+  @ApiProperty({ example: "test NFT" })
+  @Prop({ default: "" })
+  depositAddress: string;
+
+
   @ApiProperty({
     type: "string",
     example: 1,
