@@ -154,7 +154,7 @@ export class LandService {
       },
       {
         $group: {
-          _id: "$ownerAddress",
+          _id: "$depositAddress",
           count: { $sum: 1 },
         },
       },
