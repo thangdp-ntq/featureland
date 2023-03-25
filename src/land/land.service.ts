@@ -29,7 +29,7 @@ export class LandService {
       match["ownerAddress"] = getParams.ownerAddress;
     }
     if (getParams.useAddNftAddress) {
-      match["useAddNftAddress"] = getParams.useAddNftAddress;
+      match["useAddNftAddress"] = getParams.useAddNftAddress?.toLowerCase();
     }
     const sort: Record<string, any> = {
       version: 1,
