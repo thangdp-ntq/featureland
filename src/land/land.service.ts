@@ -177,14 +177,14 @@ export class LandService {
       //đủ 500 nft
       throw "Land has owner";
     }
-    if (
-      land.useAddNftAddress &&
-      land.useAddNftAddress !== address &&
-      land.numberNfts >= NUMBER_NFT_TO_ADD_NFT
-    ) {
-      // 200 nft và ko phải address
-      throw "you wallet cannot add nft";
-    }
+//     if (
+//       land.useAddNftAddress &&
+//       land.useAddNftAddress !== address &&
+//       land.numberNfts >= NUMBER_NFT_TO_ADD_NFT
+//     ) {
+//       // 200 nft và ko phải address
+//       throw "you wallet cannot add nft";
+//     }
     // update nft
     const session = await this.connection.startSession();
 
