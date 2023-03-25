@@ -28,6 +28,9 @@ export class LandService {
     if (getParams.ownerAddress) {
       match["ownerAddress"] = getParams.ownerAddress;
     }
+    if (getParams.useAddNftAddress) {
+      match["useAddNftAddress"] = getParams.useAddNftAddress;
+    }
     const sort: Record<string, any> = {
       version: 1,
     };

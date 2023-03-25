@@ -91,11 +91,11 @@ export class NftController {
     }
   }
 
-  @Get('dump')
-  dummyData(@Query() data){
-    console.log(data)
-    return this.nftService.TranferNftFile(data)
-  }
+  // @Get('dump')
+  // dummyData(@Query() data){
+  //   console.log(data)
+  //   return this.nftService.TranferNftFile(data)
+  // }
 
 
   @Get(":id")
