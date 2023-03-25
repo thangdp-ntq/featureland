@@ -174,10 +174,10 @@ export class NftService {
       });
   }
   async TranferNft(data) {
-    const nftLogs = await this.logModel.findOne({
-      transactionHash: data.transactionHash,
-    });
-    if (nftLogs) return true;
+    // const nftLogs = await this.logModel.findOne({
+    //   transactionHash: data.transactionHash,
+    // });
+    // if (nftLogs) return true;
     const nft = await this.nftModel.findOne({
       tokenId: Number(data.metadata.tokenId),
     });
