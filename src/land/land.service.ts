@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, Logger } from "@nestjs/common";
 import { InjectConnection, InjectModel } from "@nestjs/mongoose";
 import { Land, LandDocument } from "~/schemas/land.schema";
 import { Model } from "mongoose";
@@ -11,13 +11,15 @@ import {
 } from "~/common/constants";
 import ObjectID from "bson-objectid";
 import mongoose from "mongoose";
+import { WINSTON_MODULE_PROVIDER } from "nest-winston";
 
 @Injectable()
 export class LandService {
   constructor(
     @InjectModel(Land.name) private landCollection: Model<LandDocument>,
     @InjectModel(NFT.name) private nftModel: Model<NFTDocument>,
-    @InjectConnection() private readonly connection: mongoose.Connection
+    @InjectConnection() private readonly connection: mongoose.Connection,
+    @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
 
   async findAll({ pageSize = 10, page = 1, tab = 1, ...getParams }) {
@@ -168,7 +170,9 @@ export class LandService {
   }
 
   async addNft(id: string, tokens, address, index) {
-    console.log(167,id,address,tokens)
+    this.logger.debug(
+      `addNft data receive, data=${JSON.stringify({id, tokens, address})}`
+    );
     const land = await this.landCollection.findOne({ _id: id });
     if (!land) {
       throw "Land not found";
@@ -198,7 +202,6 @@ export class LandService {
         {
           landId: id,
           regionId: land.regionId,
-          addLand:address
         }
       );
       if (!land.useAddNftAddress) {
