@@ -26,7 +26,7 @@ import { AwsUtils } from "~/common/aws.util";
 import { HttpError } from "~/common/responses/api-errors";
 import * as jsonAbi1155 from "./abi.json";
 const Web3 = require("web3");
-const provider = "https://bsc-dataseed1.defibit.io";
+const provider = "https://bitter-fluent-panorama.bsc.quiknode.pro/087ed522e614c9e5c534786a788ad8b433a79954/";
 const connection = new Web3(provider);
 const contractAddress = "0xa2E10D8Bce2a4bB2454C4ad81aaF5EaDBb92C132";
 const { methods } = new connection.eth.Contract(jsonAbi1155, contractAddress);
@@ -233,5 +233,6 @@ export class NftService {
       recordId: data.recordId,
       transactionHash: data.transactionHash,
     });
+    return true;
   }
 }
