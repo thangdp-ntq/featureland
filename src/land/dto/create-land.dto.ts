@@ -16,6 +16,13 @@ export class AddNFTDto {
     example: 1,
   })
   index: number;
+
+  @IsOptional()
+  @ApiProperty({
+    type: String,
+    example: 1,
+  })
+  address: string;
 }
 
 export class RemoveNFTDto {
