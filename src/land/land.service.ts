@@ -175,10 +175,16 @@ export class LandService {
     );
     const land = await this.landCollection.findOne({ _id: id });
     if (!land) {
+      this.logger.debug(
+        `addNft error, data=${JSON.stringify({id, tokens, address,error:'Land not found'})}`
+      );
       throw "Land not found";
     }
     if (land.ownerAddress) {
       //đủ 500 nft
+      this.logger.debug(
+        `addNft error, data=${JSON.stringify({id, tokens, address,error:'Land has owne'})}`
+      );
       throw "Land has owner";
     }
 //     if (
@@ -232,6 +238,9 @@ export class LandService {
       );
       await session.commitTransaction();
     } catch (error) {
+      this.logger.debug(
+        `addNft error, data=${JSON.stringify({id, tokens, address,error})}`
+      );
       await session.abortTransaction();
       throw error;
     } finally {
