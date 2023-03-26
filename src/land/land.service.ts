@@ -31,7 +31,7 @@ export class LandService {
       match["ownerAddress"] = getParams.ownerAddress;
     }
     if (getParams.useAddNftAddress) {
-      tab=undefined
+      tab = undefined;
       match["useAddNftAddress"] = getParams.useAddNftAddress?.toLowerCase();
     }
     const sort: Record<string, any> = {
@@ -171,81 +171,99 @@ export class LandService {
 
   async addNft(id: string, tokens, address, index) {
     this.logger.debug(
-      `addNft data receive, data=${JSON.stringify({id, tokens, address})}`
+      `addNft data receive, data=${JSON.stringify({ id, tokens, address })}`
     );
     const land = await this.landCollection.findOne({ _id: id });
     if (!land) {
       this.logger.debug(
-        `addNft error, data=${JSON.stringify({id, tokens, address,error:'Land not found'})}`
+        `addNft error, data=${JSON.stringify({
+          id,
+          tokens,
+          address,
+          error: "Land not found",
+        })}`
       );
       throw "Land not found";
     }
     if (land.ownerAddress) {
       //đủ 500 nft
       this.logger.debug(
-        `addNft error, data=${JSON.stringify({id, tokens, address,error:'Land has owne'})}`
+        `addNft error, data=${JSON.stringify({
+          id,
+          tokens,
+          address,
+          error: "Land has owne",
+        })}`
       );
       throw "Land has owner";
     }
-//     if (
-//       land.useAddNftAddress &&
-//       land.useAddNftAddress !== address &&
-//       land.numberNfts >= NUMBER_NFT_TO_ADD_NFT
-//     ) {
-//       // 200 nft và ko phải address
-//       throw "you wallet cannot add nft";
-//     }
+    //     if (
+    //       land.useAddNftAddress &&
+    //       land.useAddNftAddress !== address &&
+    //       land.numberNfts >= NUMBER_NFT_TO_ADD_NFT
+    //     ) {
+    //       // 200 nft và ko phải address
+    //       throw "you wallet cannot add nft";
+    //     }
     // update nft
-    const session = await this.connection.startSession();
 
-    session.startTransaction();
     try {
-      if (tokens.length < 1) {
-        return;
-      }
-      await this.nftModel.updateMany(
-        { tokenId: { $in: tokens }, landId: "" },
-        {
+      const session = await this.connection.startSession();
+      session.startTransaction();
+      try {
+        if (tokens.length < 1) {
+          return;
+        }
+        await this.nftModel.updateMany(
+          { tokenId: { $in: tokens }, landId: "" },
+          {
+            landId: id,
+            regionId: land.regionId,
+          }
+        );
+        if (!land.useAddNftAddress) {
+          await this.landCollection.updateOne(
+            { _id: ObjectID(id) },
+            {
+              useAddNftAddress: address,
+            }
+          );
+        }
+        //find nfts
+        const nfts = await this.nftModel.find({
           landId: id,
-          regionId: land.regionId,
+        });
+        if (nfts.length >= NUMBER_NFT_TO_OWNER) {
+          await this.landCollection.updateOne(
+            { _id: ObjectID(id) },
+            {
+              ownerAddress: land.useAddNftAddress,
+            }
+          );
         }
-      );
-      if (!land.useAddNftAddress) {
         await this.landCollection.updateOne(
           { _id: ObjectID(id) },
           {
-            useAddNftAddress: address,
+            numberNfts: nfts.length,
           }
         );
-      }
-      //find nfts
-      const nfts = await this.nftModel.find({
-        landId: id,
-      });
-      if (nfts.length >= NUMBER_NFT_TO_OWNER) {
-        await this.landCollection.updateOne(
-          { _id: ObjectID(id) },
-          {
-            ownerAddress: land.useAddNftAddress,
-          }
+        await session.commitTransaction();
+      } catch (error) {
+        this.logger.debug(
+          `addNft error 253, data=${JSON.stringify({ id, tokens, address, error })}`
         );
+        await session.abortTransaction();
+        throw error;
+      } finally {
+        session.endSession();
       }
-      await this.landCollection.updateOne(
-        { _id: ObjectID(id) },
-        {
-          numberNfts: nfts.length,
-        }
-      );
-      await session.commitTransaction();
     } catch (error) {
       this.logger.debug(
-        `addNft error, data=${JSON.stringify({id, tokens, address,error})}`
+        `addNft error 262, data=${JSON.stringify({ id, tokens, address, error })}`
       );
-      await session.abortTransaction();
-      throw error;
-    } finally {
-      session.endSession();
+      return error
     }
+
     return await this.landCollection.findOne({ _id: id });
   }
   async removeNft(id: string, tokens, address) {
