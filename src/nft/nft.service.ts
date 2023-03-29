@@ -141,7 +141,8 @@ export class NftService {
   }
 
   async TranferNftFile(data) {
-    const address = data.address.trim().toLowerCase();
+    try {
+     const address = data.address.trim().toLowerCase();
     console.log(address);
     balanceOf(address)
       .call()
@@ -172,6 +173,10 @@ export class NftService {
             });
         }
       });
+    } catch (error) {
+		
+		}
+   
   }
   async TranferNft(data) {
     // const nftLogs = await this.logModel.findOne({
