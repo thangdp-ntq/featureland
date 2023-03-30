@@ -15,11 +15,14 @@ import { PriceToken, PriceTokenSchema } from '~/schemas/price-token.schema';
 import { TimeSetting, TimeSettingSchema } from '~/schemas/time-setting.schema';
 import { NFT, NFTSchema, User, UserSchema } from '~/schemas';
 import { NFTLog, NFTLogSchema } from '~/schemas/nft-log.schema';
+import { LandService } from '~/land/land.service';
+import { Land, LandSchema } from '~/schemas/land.schema';
 
 @Module({
   imports: [
     WinstonModule,
     MongooseModule.forFeature([
+      { name: Land.name, schema: LandSchema },
       { name: PriceToken.name, schema: PriceTokenSchema },
       { name: TimeSetting.name, schema: TimeSettingSchema },
       { name: NFT.name, schema: NFTSchema },
@@ -34,7 +37,8 @@ import { NFTLog, NFTLogSchema } from '~/schemas/nft-log.schema';
     EventsGateway,
     ValidateAddressWalletService,
     CommonService,
-    NftService
+    NftService,
+    LandService
   ],
 })
 export class WebhookModule {}

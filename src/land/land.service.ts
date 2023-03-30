@@ -169,7 +169,7 @@ export class LandService {
     ]);
   }
 
-  async addNft(id: string, tokens, address, index) {
+  async addNft(id: string, tokens, address) {
     this.logger.debug(
       `addNft data receive, data=${JSON.stringify({ id, tokens, address })}`
     );

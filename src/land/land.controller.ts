@@ -122,23 +122,23 @@ export class LandController {
       },
     },
   })
-  async addNft(
-    @Param("id") id: string,
-    @Body() bodyAddNFt: AddNFTDto,
-    @Req() req
-  ) {
-    try {
-      const res = await this.landService.addNft(
-        id,
-        bodyAddNFt.tokenIds,
-        bodyAddNFt.address.toLowerCase(),
-        bodyAddNFt.index
-      );
-      return res;
-    } catch (error) {
-      throw HttpError.error(HttpStatus.BAD_REQUEST, error, []);
-    }
-  }
+  // async addNft(
+  //   @Param("id") id: string,
+  //   @Body() bodyAddNFt: AddNFTDto,
+  //   @Req() req
+  // ) {
+  //   try {
+  //     const res = await this.landService.addNft(
+  //       id,
+  //       bodyAddNFt.tokenIds,
+  //       bodyAddNFt.address.toLowerCase(),
+  //       bodyAddNFt.index
+  //     );
+  //     return res;
+  //   } catch (error) {
+  //     throw HttpError.error(HttpStatus.BAD_REQUEST, error, []);
+  //   }
+  // }
 
   @Post(":id/remove-nft")
   @ApiResponse({

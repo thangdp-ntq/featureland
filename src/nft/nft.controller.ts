@@ -93,7 +93,6 @@ export class NftController {
 
   @Get('update')
   dummyData(@Query() data){
-    console.log(data)
     return this.nftService.TranferNftFile(data)
   }
 

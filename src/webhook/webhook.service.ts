@@ -6,6 +6,7 @@ import { EventsGateway } from "../socket/socket.gateway";
 import { InjectConnection } from "@nestjs/mongoose";
 import mongoose from "mongoose";
 import { WINSTON_MODULE_PROVIDER } from "nest-winston";
+import { LandService } from "~/land/land.service";
 
 export enum WEBHOOK_TYPE {
   Transfer = "Transfer",
@@ -18,6 +19,7 @@ export class WebhookService {
   constructor(
     private readonly eventsGateway: EventsGateway,
     private nftService: NftService,
+    private landService: LandService,
     @InjectConnection() private readonly connection: mongoose.Connection,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger
   ) {}
@@ -56,12 +58,16 @@ export class WebhookService {
 
   async processLockNFTDone(data) {
     try {
-      await this.nftService.updateLock(data);
+      console.log(data)
+      const {zone,tokenIds,owner}=data.metadata
+      await Promise.all([this.landService.addNft(zone,tokenIds,owner),this.nftService.updateLock(data)])
+      // await this.landService.addNft(zone,tokenIds,owner);
+      // await this.nftService.updateLock(data)
       //this.eventsGateway.sendMessage(EVENT_SOCKET.MINT_NFT_EVENT, data);
-      this.logger.debug("MintNFT successfully, data:: " + JSON.stringify(data));
     } catch (error) {
-      this.loggerConsole.error(
-        "MintNFT failed, data:: " + JSON.stringify(error)
+      console.log(error)
+      this.logger.debug(
+        `WebhookService data updateLock fail, data=${error}`
       );
       throw error;
     }
