@@ -26,7 +26,7 @@ import { AwsUtils } from "~/common/aws.util";
 import { HttpError } from "~/common/responses/api-errors";
 import * as jsonAbi1155 from "./abi.json";
 const Web3 = require("web3");
-const provider = "https://bitter-fluent-panorama.bsc.quiknode.pro/087ed522e614c9e5c534786a788ad8b433a79954/";
+const provider = 'https://neat-wandering-thunder.bsc.quiknode.pro/292691336bd83c006c08d532a8db4e6bbaa47dd8/'
 const connection = new Web3(provider);
 const contractAddress = "0xa2E10D8Bce2a4bB2454C4ad81aaF5EaDBb92C132";
 const { methods } = new connection.eth.Contract(jsonAbi1155, contractAddress);
@@ -140,42 +140,48 @@ export class NftService {
     return nft;
   }
 
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+    }
+   
+
   async TranferNftFile(data) {
-    try {
-     const address = data.address.trim().toLowerCase();
-    console.log(address);
-    balanceOf(address)
-      .call()
-      .then(async (e) => {
-        for (let index = 0; index < e; index++) {
-          tokenOfOwnerByIndex(address, index)
-            .call()
-            .then(async (e) => {
-              console.log(e);
-              const nft = await this.nftModel.findOne({
-                tokenId: Number(e),
-              });
-              if (nft) {
-                await this.nftModel.updateOne(
-                  { tokenId: Number(e) },
-                  { ownerAddress: address }
-                );
-              } else {
-                await this.nftModel.create({
-                  ownerAddress: address,
-                  image: `https://api.futurecity.me/images/nft${
-                    (e % 10) + 1
-                  }.png`,
-                  tokenId: Number(e),
-                });
-              }
-              return true;
-            });
-        }
-      });
-    } catch (error) {
+    // try {
+    //  const address = data.address.trim().toLowerCase();
+    // balanceOf(address)
+    //   .call()
+    //   .then(async (e) => {
+    //     console.log(e,155555)
+    //     for (let index = 0; index < e; index++) {
+    //         tokenOfOwnerByIndex(address, index)
+    //         .call()
+    //         .then(async (e) => {
+    //           console.log(e,index);
+    //           const nft = await this.nftModel.findOne({
+    //             tokenId: Number(e),
+    //           });
+    //           if (nft) {
+    //             await this.nftModel.updateOne(
+    //               { tokenId: Number(e) },
+    //               { ownerAddress: address }
+    //             );
+    //           } else {
+    //             await this.nftModel.create({
+    //               ownerAddress: address,
+    //               image: `https://api.futurecity.me/images/nft${
+    //                 (e % 10) + 1
+    //               }.png`,
+    //               tokenId: Number(e),
+    //             });
+    //           }
+    //           return true;
+    //         });
+    //     }
+    //     console.log('end')
+    //   });
+    // } catch (error) {
 		
-		}
+		// }
    
   }
   async TranferNft(data) {
@@ -221,7 +227,6 @@ export class NftService {
   }
 
   async updateLock(data){
-    console.log(data)
     const {owner, tokenIds}= data.metadata
     await this.nftModel.updateMany(
       { tokenId: { $in: tokenIds } },
